@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Domain\Surveys\SurveyRepository;
 use App\Infrastructure\Database;
+use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -75,6 +76,50 @@ return static function (App $app): void {
                 'trigger_event' => (string) $survey['trigger_event'],
                 'title' => $survey['title'],
                 'description' => $survey['description'],
+                'questions' => (static function (int $surveyId): array {
+                    $stmt = Database::connection()->prepare(
+                        'SELECT id, field_name, label, question_type, position, is_required,
+                                placeholder, help_text, options_json, scale_min, scale_max
+                         FROM questions
+                         WHERE survey_id = :survey_id
+                         ORDER BY position ASC, id ASC'
+                    );
+                    $stmt->execute(['survey_id' => $surveyId]);
+                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+                    foreach ($rows as &$row) {
+                        $decoded = json_decode((string) ($row['options_json'] ?? ''), true);
+                        $row['id'] = (int) $row['id'];
+                        $row['position'] = (int) $row['position'];
+                        $row['is_required'] = (int) $row['is_required'];
+                        $row['options'] = is_array($decoded) ? array_values($decoded) : [];
+                        $row['scale_min'] = ($row['scale_min'] !== null) ? (int) $row['scale_min'] : null;
+                        $row['scale_max'] = ($row['scale_max'] !== null) ? (int) $row['scale_max'] : null;
+                        unset($row['options_json']);
+                    }
+
+                    return $rows;
+                })((int) $survey['id']),
+                'rules' => (static function (int $surveyId): array {
+                    $stmt = Database::connection()->prepare(
+                        'SELECT id, source_question_id, operator, compare_value,
+                                target_question_id, action, position
+                         FROM survey_rules
+                         WHERE survey_id = :survey_id
+                         ORDER BY position ASC, id ASC'
+                    );
+                    $stmt->execute(['survey_id' => $surveyId]);
+                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+                    foreach ($rows as &$row) {
+                        $row['id'] = (int) $row['id'];
+                        $row['source_question_id'] = (int) $row['source_question_id'];
+                        $row['target_question_id'] = (int) $row['target_question_id'];
+                        $row['position'] = (int) $row['position'];
+                    }
+
+                    return $rows;
+                })((int) $survey['id']),
             ],
             'errors' => [],
         ];

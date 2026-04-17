@@ -56,6 +56,14 @@
                                             <td class="text-right">
                                                 <button
                                                     class="btn alert-info"
+                                                    hx-get="/admin/partials/questions?survey_id=<?= (int) $survey['id'] ?>"
+                                                    hx-target="#admin-content"
+                                                    hx-swap="innerHTML"
+                                                >
+                                                    Perguntas
+                                                </button>
+                                                <button
+                                                    class="btn alert-info"
                                                     hx-get="/admin/surveys/form/<?= (int) $survey['id'] ?>"
                                                     hx-target="#survey-form-panel"
                                                     hx-swap="innerHTML"

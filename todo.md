@@ -57,14 +57,14 @@ Criterio de aceite:
 - [x] Pesquisa publicada pode ser carregada pela API do widget.
 
 ## Fase 5 - Editor de perguntas e regras
-- [ ] CRUD de perguntas por pesquisa.
-- [ ] Suporte a tipos: nota 0-10, estrelas 0-5, texto, select, checkbox, radio.
-- [ ] Campo obrigatorio por pergunta.
-- [ ] Regras condicionais (ex.: mostrar pergunta se nota < 5).
-- [ ] Ordenacao de perguntas.
+- [x] CRUD de perguntas por pesquisa.
+- [x] Suporte a tipos: nota 0-10, estrelas 0-5, texto, select, checkbox, radio.
+- [x] Campo obrigatorio por pergunta.
+- [x] Regras condicionais (ex.: mostrar pergunta se nota < 5).
+- [x] Ordenacao de perguntas.
 
 Criterio de aceite:
-- [ ] Formulario respeita obrigatoriedade e regras condicionais.
+- [x] Formulario respeita obrigatoriedade e regras condicionais.
 
 ## Fase 6 - API publica do widget
 - [ ] GET configuracao da pesquisa por chave+gatilho.
