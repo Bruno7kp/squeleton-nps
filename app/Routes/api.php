@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Domain\Surveys\SurveyRepository;
 use App\Infrastructure\Database;
-use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -41,7 +40,7 @@ return static function (App $app): void {
              ORDER BY position ASC, id ASC'
         );
         $questionsStmt->execute(['survey_id' => $surveyId]);
-        $questions = $questionsStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $questions = $questionsStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
 
         foreach ($questions as &$question) {
             $decoded = json_decode((string) ($question['options_json'] ?? ''), true);
@@ -62,7 +61,7 @@ return static function (App $app): void {
              ORDER BY position ASC, id ASC'
         );
         $rulesStmt->execute(['survey_id' => $surveyId]);
-        $rules = $rulesStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $rules = $rulesStmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
 
         foreach ($rules as &$rule) {
             $rule['id'] = (int) $rule['id'];
@@ -249,6 +248,27 @@ return static function (App $app): void {
         ]);
     });
 
+    $app->get('/api/showcase/stats', static function (Request $request, Response $response) use ($json): Response {
+        $pdo = Database::connection();
+
+        $projects = (int) $pdo->query('SELECT COUNT(1) FROM projects')->fetchColumn();
+        $surveys = (int) $pdo->query('SELECT COUNT(1) FROM surveys')->fetchColumn();
+        $submissions = (int) $pdo->query('SELECT COUNT(1) FROM submissions')->fetchColumn();
+        $avgNpsRaw = $pdo->query('SELECT AVG(score_nps) FROM submissions WHERE score_nps IS NOT NULL')->fetchColumn();
+        $avgNps = $avgNpsRaw !== null ? round((float) $avgNpsRaw, 2) : null;
+
+        return $json($response, [
+            'success' => true,
+            'data' => [
+                'projects' => $projects,
+                'surveys' => $surveys,
+                'submissions' => $submissions,
+                'avg_nps' => $avgNps,
+            ],
+            'errors' => [],
+        ]);
+    });
+
     $app->get('/api/widget/survey', static function (Request $request, Response $response) use ($json, $loadSurveySchema): Response {
         $params = $request->getQueryParams();
         $publicKey = trim((string) ($params['public_key'] ?? ''));
@@ -264,13 +284,19 @@ return static function (App $app): void {
 
         $repository = new SurveyRepository();
         $survey = $repository->findPublishedByProjectKeyAndTrigger($publicKey, $triggerEvent);
+        $fallbackApplied = false;
 
         if ($survey === null) {
-            return $json($response, [
-                'success' => false,
-                'data' => null,
-                'errors' => ['Pesquisa publicada nao encontrada para esta chave e gatilho.'],
-            ], 404);
+            $survey = $repository->findLatestPublishedByProjectKey($publicKey);
+            $fallbackApplied = $survey !== null;
+
+            if ($survey === null) {
+                return $json($response, [
+                    'success' => false,
+                    'data' => null,
+                    'errors' => ['Pesquisa publicada nao encontrada para esta chave e gatilho.'],
+                ], 404);
+            }
         }
 
         $schema = $loadSurveySchema((int) $survey['id']);
@@ -284,12 +310,14 @@ return static function (App $app): void {
                 'slug' => (string) $survey['slug'],
                 'status' => (string) $survey['status'],
                 'trigger_event' => (string) $survey['trigger_event'],
+                'requested_trigger_event' => $triggerEvent,
+                'fallback_applied' => $fallbackApplied,
                 'title' => $survey['title'],
                 'description' => $survey['description'],
                 'questions' => $schema['questions'],
                 'rules' => $schema['rules'],
             ],
-            'errors' => [],
+            'errors' => $fallbackApplied ? ['Nenhuma pesquisa publicada para o gatilho solicitado; exibindo fallback.'] : [],
         ]);
     });
 

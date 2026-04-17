@@ -81,6 +81,18 @@ try {
   ]);
   $surveyOnLoadId = (int) $pdo->lastInsertId();
 
+  $surveyStmt->execute([
+    'project_id' => $projectId,
+    'name' => 'NPS Retencao',
+    'slug' => 'nps-before-cancel',
+    'status' => 'published',
+    'trigger_event' => 'before_cancel',
+    'title' => 'O que podemos fazer para voce continuar?',
+    'description' => 'Pesquisa exibida antes de cancelamento para capturar risco de churn.',
+    'settings_json' => json_encode(['theme' => 'blue', 'show_logo' => true], JSON_UNESCAPED_UNICODE),
+  ]);
+  $surveyBeforeCancelId = (int) $pdo->lastInsertId();
+
   $questionStmt = $pdo->prepare('INSERT INTO questions (survey_id, label, field_name, question_type, position, is_required, placeholder, help_text, options_json, scale_min, scale_max) VALUES (:survey_id, :label, :field_name, :question_type, :position, :is_required, :placeholder, :help_text, :options_json, :scale_min, :scale_max)');
 
   $questionStmt->execute([
@@ -168,6 +180,40 @@ try {
     'scale_max' => null,
   ]);
   $qOnLoadFeatures = (int) $pdo->lastInsertId();
+
+  $questionStmt->execute([
+    'survey_id' => $surveyBeforeCancelId,
+    'label' => 'Qual o principal motivo para considerar cancelamento?',
+    'field_name' => 'cancel_reason',
+    'question_type' => 'radio',
+    'position' => 1,
+    'is_required' => 1,
+    'placeholder' => null,
+    'help_text' => null,
+    'options_json' => json_encode([
+      'Preco',
+      'Baixo uso',
+      'Falta de funcionalidade',
+      'Atendimento',
+      'Outro',
+    ], JSON_UNESCAPED_UNICODE),
+    'scale_min' => null,
+    'scale_max' => null,
+  ]);
+
+  $questionStmt->execute([
+    'survey_id' => $surveyBeforeCancelId,
+    'label' => 'Em uma escala de 0 a 10, qual chance de voce reconsiderar?',
+    'field_name' => 'reconsider_score',
+    'question_type' => 'score_0_10',
+    'position' => 2,
+    'is_required' => 0,
+    'placeholder' => null,
+    'help_text' => null,
+    'options_json' => null,
+    'scale_min' => 0,
+    'scale_max' => 10,
+  ]);
 
   $ruleStmt = $pdo->prepare('INSERT INTO survey_rules (survey_id, source_question_id, operator, compare_value, target_question_id, action, position) VALUES (:survey_id, :source_question_id, :operator, :compare_value, :target_question_id, :action, :position)');
   $ruleStmt->execute([

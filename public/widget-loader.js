@@ -11,6 +11,7 @@
 
     var publicKey = (currentScript.dataset.npsKey || '').trim();
     var triggerEvent = (currentScript.dataset.npsTrigger || 'on_load').trim();
+    var activeTriggerEvent = triggerEvent;
 
     if (!publicKey) {
         console.warn('NPS widget: data-nps-key is required.');
@@ -37,6 +38,31 @@
         submitting: false,
     };
     var widgetRootEl = null;
+
+    function loadSurvey(nextTrigger) {
+        if (nextTrigger) {
+            activeTriggerEvent = nextTrigger;
+        }
+
+        state.loading = true;
+        state.submitError = '';
+        state.submitSuccess = '';
+        state.errors = {};
+        state.answers = {};
+        render();
+
+        return fetch(apiBase + '/api/widget/survey?public_key=' + encodeURIComponent(publicKey) + '&trigger_event=' + encodeURIComponent(activeTriggerEvent))
+            .then(function (response) { return response.json(); })
+            .then(function (result) {
+                if (!result.success || !result.data) {
+                    throw new Error('Survey schema unavailable');
+                }
+
+                state.survey = result.data;
+                state.loading = false;
+                render();
+            });
+    }
 
     function ensureStyles() {
         if (document.getElementById(styleId)) {
@@ -87,6 +113,39 @@
             script.onerror = function () { reject(new Error('Failed to load ' + src)); };
             document.head.appendChild(script);
         });
+    }
+
+    function hasVanJs() {
+        return !!(window.van && window.van.tags && typeof window.van.add === 'function');
+    }
+
+    function hasA11yDialog() {
+        return typeof window.A11yDialog === 'function';
+    }
+
+    function ensureDependencies() {
+        if (hasVanJs() && hasA11yDialog()) {
+            return Promise.resolve();
+        }
+
+        // Prefer Squeleton bundle first: many hosts already have it loaded.
+        return loadScript('https://cdn.squeleton.dev/squeleton-scripts.v4.min.js')
+            .catch(function () {
+                return null;
+            })
+            .then(function () {
+                var pending = [];
+
+                if (!hasVanJs()) {
+                    pending.push(loadScript('https://cdn.jsdelivr.net/npm/vanjs-core@1.5.2'));
+                }
+
+                if (!hasA11yDialog()) {
+                    pending.push(loadScript('https://cdn.jsdelivr.net/npm/a11y-dialog@8.0.0/dist/a11y-dialog.min.js'));
+                }
+
+                return Promise.all(pending);
+            });
     }
 
     function ruleMatches(answer, operator, compareValue) {
@@ -196,9 +255,14 @@
         var error = state.errors[question.field_name] || '';
         var id = widgetId + '-' + question.field_name;
 
-        function wrap(control) {
+        function wrap(control, bindLabelToControl) {
+            var labelAttrs = { class: 'npsw-label' };
+            if (bindLabelToControl !== false) {
+                labelAttrs.for = id;
+            }
+
             return tags.div({ class: 'npsw-field' },
-                tags.label({ class: 'npsw-label', for: id }, question.label + (Number(question.is_required) === 1 ? ' *' : '')),
+                tags.label(labelAttrs, question.label + (Number(question.is_required) === 1 ? ' *' : '')),
                 control,
                 question.help_text ? tags.small({ class: 'npsw-help' }, question.help_text) : null,
                 error ? tags.div({ class: 'npsw-error' }, error) : null
@@ -254,7 +318,7 @@
                     }),
                     option
                 );
-            })));
+            })), false);
         }
 
         if (question.question_type === 'checkbox') {
@@ -279,7 +343,7 @@
                     }),
                     option
                 );
-            })));
+            })), false);
         }
 
         return wrap(tags.input({
@@ -294,7 +358,7 @@
 
     function render() {
         var van = window.van;
-        if (!van || !state.survey || !widgetRootEl) {
+        if (!van || !widgetRootEl) {
             return;
         }
 
@@ -304,6 +368,17 @@
 
         if (state.loading) {
             van.add(root, tags.div({ class: 'npsw-body' }, 'Carregando pesquisa...'));
+            return;
+        }
+
+        if (!state.survey) {
+            van.add(root,
+                tags.div({ class: 'npsw-body' },
+                    state.submitError
+                        ? tags.div({ class: 'npsw-error' }, state.submitError)
+                        : tags.div({ class: 'npsw-error' }, 'Pesquisa indisponivel no momento.')
+                )
+            );
             return;
         }
 
@@ -327,7 +402,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     public_key: publicKey,
-                    trigger_event: triggerEvent,
+                    trigger_event: activeTriggerEvent,
                     source_url: window.location.href,
                     user_identifier: userIdentifier || null,
                     session_identifier: sessionIdentifier || null,
@@ -388,6 +463,7 @@
                 '<div class="npsw-backdrop" data-a11y-dialog-hide></div>' +
                 '<div class="npsw-panel" role="document">' +
                     '<button class="npsw-close" type="button" data-a11y-dialog-hide>Fechar</button>' +
+                    '<h3 id="' + dialogId + '-title" class="sr-only" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Pesquisa NPS</h3>' +
                     '<div id="' + widgetId + '-root"></div>' +
                 '</div>' +
             '</div>';
@@ -397,6 +473,7 @@
         var openButton = document.getElementById(widgetId + '-open');
         var dialogElement = document.getElementById(dialogId);
         widgetRootEl = document.getElementById(widgetId + '-root');
+        render();
 
         var dialogApi = null;
         if (window.A11yDialog) {
@@ -405,19 +482,39 @@
         }
 
         function openDialog() {
-            if (dialogApi) {
-                dialogApi.show();
+            var liveDialogElement = document.getElementById(dialogId) || dialogElement;
+            if (!liveDialogElement) {
                 return;
             }
-            dialogElement.setAttribute('aria-hidden', 'false');
+
+            try {
+                if (dialogApi) {
+                    dialogApi.show();
+                }
+            } catch (error) {
+                console.warn('NPS widget: dialogApi.show failed, using fallback.', error);
+            }
+
+            liveDialogElement.setAttribute('aria-hidden', 'false');
+            liveDialogElement.style.display = 'block';
         }
 
         function closeDialog() {
-            if (dialogApi) {
-                dialogApi.hide();
+            var liveDialogElement = document.getElementById(dialogId) || dialogElement;
+            if (!liveDialogElement) {
                 return;
             }
-            dialogElement.setAttribute('aria-hidden', 'true');
+
+            try {
+                if (dialogApi) {
+                    dialogApi.hide();
+                }
+            } catch (error) {
+                console.warn('NPS widget: dialogApi.hide failed, using fallback.', error);
+            }
+
+            liveDialogElement.setAttribute('aria-hidden', 'true');
+            liveDialogElement.style.display = 'none';
         }
 
         openButton.addEventListener('click', openDialog);
@@ -431,32 +528,37 @@
         window.NPSWidget = window.NPSWidget || {};
         window.NPSWidget.open = openDialog;
         window.NPSWidget.close = closeDialog;
+        window.NPSWidget.openWithTrigger = function (nextTrigger) {
+            var trigger = String(nextTrigger || '').trim();
+            if (!trigger) {
+                openDialog();
+                return;
+            }
+
+            openDialog();
+            loadSurvey(trigger)
+                .then(function () {})
+                .catch(function () {
+                    state.loading = false;
+                    state.submitError = 'Nao foi possivel carregar a pesquisa para este gatilho.';
+                    render();
+                });
+        };
 
         if (shouldAutoOpen) {
-            openDialog();
+            window.NPSWidget.openWithTrigger(activeTriggerEvent);
         }
     }
 
     function bootstrap() {
-        Promise.all([
-            loadScript('https://cdn.jsdelivr.net/npm/vanjs-core@1.5.2/src/van.min.js'),
-            loadScript('https://cdn.jsdelivr.net/npm/a11y-dialog@8.0.0/dist/a11y-dialog.min.js'),
-        ])
+        ensureDependencies()
             .then(function () {
-                return fetch(apiBase + '/api/widget/survey?public_key=' + encodeURIComponent(publicKey) + '&trigger_event=' + encodeURIComponent(triggerEvent));
-            })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (result) {
-                if (!result.success || !result.data) {
-                    throw new Error('Survey schema unavailable');
-                }
-
-                state.survey = result.data;
-                state.loading = false;
                 ensureDialog();
-                render();
+                return loadSurvey(activeTriggerEvent).catch(function () {
+                    state.loading = false;
+                    state.submitError = 'Nao foi possivel carregar a pesquisa inicial.';
+                    render();
+                });
             })
             .catch(function (error) {
                 console.error('NPS widget initialization error:', error);

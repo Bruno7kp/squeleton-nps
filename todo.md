@@ -86,15 +86,15 @@ Criterio de aceite:
 - [x] Widget roda em pagina externa e salva respostas no backend.
 
 ## Fase 8 - Home showcase
-- [ ] Criar hero e secoes de vitrine com classes Squeleton.
-- [ ] Integrar Wow2 para animacoes de entrada.
-- [ ] Integrar Embla Carousel para demonstracao de pesquisas.
-- [ ] Exibir contadores reais com Counter-Up2.
-- [ ] Integrar YouTube ID DMrJUyg7TYM e disparar gatilho after_completed_video no fim.
-- [ ] Adicionar botoes para simular gatilhos manuais.
+- [x] Criar hero e secoes de vitrine com classes Squeleton.
+- [x] Integrar Wow2 para animacoes de entrada.
+- [x] Integrar Embla Carousel para demonstracao de pesquisas.
+- [x] Exibir contadores reais com Counter-Up2.
+- [x] Integrar YouTube ID DMrJUyg7TYM e disparar gatilho after_completed_video no fim.
+- [x] Adicionar botoes para simular gatilhos manuais.
 
 Criterio de aceite:
-- [ ] Finalizacao do video abre pesquisa com gatilho after_completed_video.
+- [x] Finalizacao do video abre pesquisa com gatilho after_completed_video.
 
 ## Fase 9 - Dashboard e analytics
 - [ ] Cards de metricas (total respostas, media NPS, taxa conclusao).

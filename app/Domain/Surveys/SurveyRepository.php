@@ -128,6 +128,29 @@ final class SurveyRepository
         return is_array($survey) ? $survey : null;
     }
 
+    public function findLatestPublishedByProjectKey(string $publicKey): ?array
+    {
+        $stmt = $this->connection()->prepare(
+            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.trigger_event, s.title, s.description,
+                    p.public_key
+             FROM surveys s
+             INNER JOIN projects p ON p.id = s.project_id
+             WHERE p.public_key = :public_key
+               AND s.status = :status
+             ORDER BY s.updated_at DESC, s.id DESC
+             LIMIT 1'
+        );
+
+        $stmt->execute([
+            'public_key' => $publicKey,
+            'status' => 'published',
+        ]);
+
+        $survey = $stmt->fetch();
+
+        return is_array($survey) ? $survey : null;
+    }
+
     private function connection(): PDO
     {
         return Database::connection();
