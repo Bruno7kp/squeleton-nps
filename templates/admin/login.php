@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Admin | NPS Squeleton.dev</title>
     <link rel="stylesheet" href="https://cdn.squeleton.dev/squeleton.v4.min.css">
+    <link rel="stylesheet" href="/admin.css">
     <script src="https://cdn.squeleton.dev/squeleton-main.v4.min.js"></script>
 </head>
-<body>
+<body class="admin-login">
 <main class="container p-40-t p-20-b">
     <section class="row">
         <div class="c-xs-12 c-sm-10 c-md-6 c-lg-4 c-center">

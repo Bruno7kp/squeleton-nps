@@ -25,7 +25,7 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
         </div>
 
         <form
-            class="card p-15-all"
+            class="card p-15-all m-20-b"
             hx-get="/admin/partials/dashboard"
             hx-target="#admin-content"
             hx-swap="innerHTML"
@@ -97,7 +97,7 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
             </div>
         </form>
 
-        <div class="row gap-15">
+        <div class="row gap-15 m-20-b">
             <article class="c-xs-12 c-sm-6 c-lg-4">
                 <div class="card p-15-all">
                     <p class="fs-4 fw-700 text-uppercase ls-1 m-0-b">
