@@ -257,7 +257,7 @@ return static function (App $app): void {
         $avgNpsRaw = $pdo->query('SELECT AVG(score_nps) FROM submissions WHERE score_nps IS NOT NULL')->fetchColumn();
         $avgNps = $avgNpsRaw !== null ? round((float) $avgNpsRaw, 2) : null;
 
-        return $json($response, [
+        $apiResponse = $json($response, [
             'success' => true,
             'data' => [
                 'projects' => $projects,
@@ -267,6 +267,11 @@ return static function (App $app): void {
             ],
             'errors' => [],
         ]);
+
+        return $apiResponse
+            ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->withHeader('Pragma', 'no-cache')
+            ->withHeader('Expires', '0');
     });
 
     $app->get('/api/widget/survey', static function (Request $request, Response $response) use ($json, $loadSurveySchema): Response {

@@ -105,25 +105,25 @@
             <div class="c-xs-12 c-sm-6 c-lg-3">
                 <div class="metric-box p-15-all">
                     <p class="text-uppercase fw-700 fs-4 m-0-b">Projetos</p>
-                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="projects">0</span></p>
+                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="projects"><?= (int) (($homeStats['projects'] ?? 0)) ?></span></p>
                 </div>
             </div>
             <div class="c-xs-12 c-sm-6 c-lg-3">
                 <div class="metric-box p-15-all">
                     <p class="text-uppercase fw-700 fs-4 m-0-b">Pesquisas</p>
-                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="surveys">0</span></p>
+                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="surveys"><?= (int) (($homeStats['surveys'] ?? 0)) ?></span></p>
                 </div>
             </div>
             <div class="c-xs-12 c-sm-6 c-lg-3">
                 <div class="metric-box p-15-all">
                     <p class="text-uppercase fw-700 fs-4 m-0-b">Respostas</p>
-                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="submissions">0</span></p>
+                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="submissions"><?= (int) (($homeStats['submissions'] ?? 0)) ?></span></p>
                 </div>
             </div>
             <div class="c-xs-12 c-sm-6 c-lg-3">
                 <div class="metric-box p-15-all">
                     <p class="text-uppercase fw-700 fs-4 m-0-b">Média NPS</p>
-                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="avg_nps">0</span></p>
+                    <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="avg_nps"><?= (float) (($homeStats['avg_nps'] ?? 0)) ?></span></p>
                 </div>
             </div>
         </section>
@@ -174,7 +174,7 @@
                 EmblaCarousel(document.getElementById('survey-carousel'), { loop: true, align: 'start' });
             }
 
-            fetch('/api/showcase/stats')
+            fetch('/api/showcase/stats?t=' + Date.now(), { cache: 'no-store' })
                 .then(function (response) { return response.json(); })
                 .then(function (result) {
                     if (!result.success || !result.data) {
