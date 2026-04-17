@@ -25,6 +25,7 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
         </div>
 
         <form
+            id="dashboard-filters-form"
             class="card p-15-all m-20-b"
             hx-get="/admin/partials/dashboard"
             hx-target="#admin-content"
@@ -85,11 +86,9 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
                     Aplicar filtros
                 </button>
                 <button
+                    id="dashboard-clear-filters"
                     class="btn alert-warning"
                     type="button"
-                    hx-get="/admin/partials/dashboard"
-                    hx-target="#admin-content"
-                    hx-swap="innerHTML"
                 >
                     <span class="iccon-undo-1"></span>
                     Limpar
@@ -189,6 +188,25 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
     var root = document.getElementById('dashboard-analytics-root');
     if (!root) {
         return;
+    }
+
+    var filtersForm = document.getElementById('dashboard-filters-form');
+    var clearBtn = document.getElementById('dashboard-clear-filters');
+
+    if (filtersForm && clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            filtersForm.reset();
+
+            if (window.htmx) {
+                window.htmx.ajax('GET', '/admin/partials/dashboard', {
+                    target: '#admin-content',
+                    swap: 'innerHTML'
+                });
+                return;
+            }
+
+            window.location.href = '/admin/partials/dashboard';
+        });
     }
 
     root.querySelectorAll('[data-counter-value]').forEach(function (target) {

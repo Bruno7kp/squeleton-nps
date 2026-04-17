@@ -1,4 +1,16 @@
 <section>
+    <?php
+    $operatorLabels = [
+        'lt' => 'menor que',
+        'lte' => 'menor ou igual a',
+        'gt' => 'maior que',
+        'gte' => 'maior ou igual a',
+        'eq' => 'igual a',
+        'neq' => 'diferente de',
+        'contains' => 'contém',
+    ];
+    ?>
+
     <div class="f-col f-gap-20">
         <div class="f-row f-items-center f-justify-between xs-f-col xs-f-items-start">
             <div>
@@ -119,7 +131,9 @@
                                     <span class="fw-600">Operador</span>
                                     <select id="rule-operator" class="form-control" name="operator" required>
                                         <?php foreach ($ruleOperatorOptions as $operator): ?>
-                                            <option value="<?= htmlspecialchars((string) $operator, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string) $operator, ENT_QUOTES, 'UTF-8') ?></option>
+                                            <option value="<?= htmlspecialchars((string) $operator, ENT_QUOTES, 'UTF-8') ?>">
+                                                <?= htmlspecialchars((string) ($operatorLabels[$operator] ?? $operator), ENT_QUOTES, 'UTF-8') ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </label>
@@ -174,7 +188,7 @@
                                             <td><?= (int) $rule['position'] ?></td>
                                             <td>
                                                 Se <strong><?= htmlspecialchars((string) $rule['source_label'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                                <code><?= htmlspecialchars((string) $rule['operator'], ENT_QUOTES, 'UTF-8') ?></code>
+                                                <code><?= htmlspecialchars((string) ($operatorLabels[$rule['operator']] ?? $rule['operator']), ENT_QUOTES, 'UTF-8') ?></code>
                                                 <strong><?= htmlspecialchars((string) $rule['compare_value'], ENT_QUOTES, 'UTF-8') ?></strong>
                                             </td>
                                             <td>

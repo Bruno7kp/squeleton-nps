@@ -28,6 +28,11 @@
         </div>
 
         <div class="f-col">
+            <div id="survey-form-panel" class="card p-20-all m-20-b">
+                <h3 class="fs-8 fw-700 m-0-b">Criar Pesquisa</h3>
+                <p class="m-10-t m-0-b">Clique em "Nova Pesquisa" para abrir o formulário.</p>
+            </div>
+
             <div class="card p-15-all m-20-b">
                 <div class="table-responsive">
                     <table class="table w-100">
@@ -76,11 +81,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div id="survey-form-panel" class="card p-20-all">
-                <h3 class="fs-8 fw-700 m-0-b">Criar Pesquisa</h3>
-                <p class="m-10-t m-0-b">Clique em "Nova Pesquisa" para abrir o formulário.</p>
             </div>
         </div>
     </div>
