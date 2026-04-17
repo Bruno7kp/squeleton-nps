@@ -11,12 +11,12 @@ Entregar uma plataforma NPS em producao com PHP Slim, SQLite, HTMX, VanJS e Sque
 ## Roadmap por fases
 
 ## Fase 0 - Fundacao tecnica
-- [ ] Definir estrutura de pastas (app, public, templates, database, scripts).
-- [ ] Configurar Slim com rotas web e API.
-- [ ] Configurar SQLite com conexao unica e camada de acesso.
-- [ ] Configurar Docker (PHP 8.x + Nginx) para ambiente local/producao.
-- [ ] Criar .env.example com ADMIN_USER, ADMIN_PASS e variaveis de app.
-- [ ] Criar comando unico de setup (Makefile ou setup.sh).
+- [x] Definir estrutura de pastas (app, public, templates, database, scripts).
+- [x] Configurar Slim com rotas web e API.
+- [x] Configurar SQLite com conexao unica e camada de acesso.
+- [x] Configurar Docker (PHP 8.x + Nginx) para ambiente local/producao.
+- [x] Criar .env.example com ADMIN_USER, ADMIN_PASS e variaveis de app.
+- [x] Criar comando unico de setup (Makefile ou setup.sh).
 
 Criterio de aceite:
 - [ ] Projeto sobe com um unico comando e responde uma rota healthcheck.

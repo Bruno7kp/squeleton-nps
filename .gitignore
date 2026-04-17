@@ -1,0 +1,12 @@
+vendor/
+node_modules/
+.env
+
+# SQLite runtime database
+database/*.sqlite
+!database/.gitkeep
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
