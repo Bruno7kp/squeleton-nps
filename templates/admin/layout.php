@@ -19,6 +19,7 @@
                 <div class="f-row f-items-center f-gap-10 xs-f-col xs-f-items-start">
                     <span class="fs-5 fw-600">Usuario: <?= htmlspecialchars((string) (($user['username'] ?? 'admin')), ENT_QUOTES, 'UTF-8') ?></span>
                     <form method="post" action="/logout">
+                        <?= \App\Support\Csrf::hiddenInput() ?>
                         <button class="btn alert-danger" type="submit">Sair</button>
                     </form>
                 </div>
@@ -28,6 +29,10 @@
 </header>
 
 <main class="container p-20-b">
+    <div id="admin-loading" class="alert alert-info p-10-all m-0-b m-10-b" style="display:none;">
+        Carregando dados...
+    </div>
+
     <section class="row">
         <div class="c-xs-12 c-md-3">
             <aside class="card p-20-all">
@@ -39,7 +44,7 @@
                         hx-target="#admin-content"
                         hx-swap="innerHTML"
                     >
-                        Dashboard Base
+                        Dashboard e Analytics
                     </button>
                     <button
                         class="btn alert-info text-left"
@@ -73,6 +78,25 @@
 <script>
 (function () {
     var messages = <?= json_encode($flashMessages ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+    var loadingEl = document.getElementById('admin-loading');
+
+    function showLoading() {
+        if (!loadingEl) {
+            return;
+        }
+        loadingEl.style.display = 'block';
+    }
+
+    function hideLoading() {
+        if (!loadingEl) {
+            return;
+        }
+        loadingEl.style.display = 'none';
+    }
+
+    document.body.addEventListener('htmx:beforeRequest', showLoading);
+    document.body.addEventListener('htmx:afterRequest', hideLoading);
+    document.body.addEventListener('htmx:responseError', hideLoading);
 
     messages.forEach(function (message) {
         if (message.type !== 'success' || typeof Toastify !== 'function') {

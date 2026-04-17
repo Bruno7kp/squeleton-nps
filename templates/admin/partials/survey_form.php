@@ -14,6 +14,7 @@
         hx-target="#admin-content"
         hx-swap="innerHTML"
     >
+        <?= \App\Support\Csrf::hiddenInput() ?>
         <label class="f-col f-gap-5" for="survey-project-id">
             <span class="fw-600">Projeto</span>
             <select id="survey-project-id" class="form-control" name="project_id" required>

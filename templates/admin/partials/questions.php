@@ -73,15 +73,18 @@
                                             <td class="text-right">
                                                 <div class="f-row f-gap-5 f-justify-end">
                                                     <form hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
+                                                        <?= \App\Support\Csrf::hiddenInput() ?>
                                                         <input type="hidden" name="direction" value="up">
                                                         <button class="btn alert-info" type="submit">Up</button>
                                                     </form>
                                                     <form hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
+                                                        <?= \App\Support\Csrf::hiddenInput() ?>
                                                         <input type="hidden" name="direction" value="down">
                                                         <button class="btn alert-info" type="submit">Down</button>
                                                     </form>
                                                     <button class="btn alert-info" hx-get="/admin/questions/form/<?= (int) $question['id'] ?>" hx-target="#question-form-panel" hx-swap="innerHTML">Editar</button>
                                                     <form hx-post="/admin/questions/<?= (int) $question['id'] ?>/delete" hx-target="#admin-content" hx-swap="innerHTML">
+                                                        <?= \App\Support\Csrf::hiddenInput() ?>
                                                         <button class="btn alert-danger" type="submit">Excluir</button>
                                                     </form>
                                                 </div>
@@ -97,6 +100,7 @@
                 <div class="card p-15-all">
                     <h3 class="fs-8 fw-700 m-0-b m-10-b">Regras Condicionais</h3>
                     <form class="f-col f-gap-10 m-10-b" hx-post="/admin/rules" hx-target="#admin-content" hx-swap="innerHTML">
+                        <?= \App\Support\Csrf::hiddenInput() ?>
                         <input type="hidden" name="survey_id" value="<?= (int) ($survey['id'] ?? 0) ?>">
 
                         <label class="f-col f-gap-5" for="rule-source-question">
@@ -179,6 +183,7 @@
                                             </td>
                                             <td class="text-right">
                                                 <form hx-post="/admin/rules/<?= (int) $rule['id'] ?>/delete" hx-target="#admin-content" hx-swap="innerHTML">
+                                                    <?= \App\Support\Csrf::hiddenInput() ?>
                                                     <input type="hidden" name="survey_id" value="<?= (int) ($survey['id'] ?? 0) ?>">
                                                     <button class="btn alert-danger" type="submit">Excluir</button>
                                                 </form>

@@ -16,6 +16,7 @@
         hx-target="#admin-content"
         hx-swap="innerHTML"
     >
+        <?= \App\Support\Csrf::hiddenInput() ?>
         <input type="hidden" name="survey_id" value="<?= (int) ($survey['id'] ?? 0) ?>">
 
         <label class="f-col f-gap-5" for="question-label">

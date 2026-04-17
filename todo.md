@@ -97,19 +97,19 @@ Criterio de aceite:
 - [x] Finalizacao do video abre pesquisa com gatilho after_completed_video.
 
 ## Fase 9 - Dashboard e analytics
-- [ ] Cards de metricas (total respostas, media NPS, taxa conclusao).
-- [ ] Lista de respostas recentes com filtros basicos.
-- [ ] Animacao dos numeros com Counter-Up2.
-- [ ] Uso consistente de icones iccon-* validos.
+- [x] Cards de metricas (total respostas, media NPS, taxa conclusao).
+- [x] Lista de respostas recentes com filtros basicos.
+- [x] Animacao dos numeros com Counter-Up2.
+- [x] Uso consistente de icones iccon-* validos.
 
 Criterio de aceite:
-- [ ] Dashboard reflete dados reais do SQLite com atualizacao por HTMX.
+- [x] Dashboard reflete dados reais do SQLite com atualizacao por HTMX.
 
 ## Fase 10 - Qualidade e prontidao de producao
-- [ ] Hardening de seguranca (session config, headers, validacoes, CSRF no admin).
-- [ ] Tratamento global de erros e pagina de fallback.
-- [ ] Revisao de UX (loading states, mensagens de erro, acessibilidade).
-- [ ] Documentar deploy e operacao.
+- [x] Hardening de seguranca (session config, headers, validacoes, CSRF no admin).
+- [x] Tratamento global de erros e pagina de fallback.
+- [x] Revisao de UX (loading states, mensagens de erro, acessibilidade).
+- [x] Documentar deploy e operacao.
 - [ ] Smoke tests manuais dos fluxos criticos.
 
 Criterio de aceite:

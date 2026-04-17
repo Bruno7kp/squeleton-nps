@@ -24,6 +24,7 @@
                 <?php endforeach; ?>
 
                 <form method="post" action="/login" class="f-col f-gap-15">
+                    <?= \App\Support\Csrf::hiddenInput() ?>
                     <label class="f-col f-gap-5" for="username">
                         <span class="fw-600">Usuario</span>
                         <input id="username" class="form-control" type="text" name="username" autocomplete="username" required>

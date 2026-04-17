@@ -106,6 +106,41 @@ Depois acesse:
 - http://127.0.0.1:8090/health
 - http://127.0.0.1:8090/api/health
 
+## Seguranca e hardening
+
+Itens aplicados na Fase 10:
+- Session hardening no entrypoint: `session.use_strict_mode`, cookie `HttpOnly`, `SameSite=Lax` e `Secure` quando HTTPS.
+- Middleware CSRF para requests mutaveis fora de `/api/*`.
+- Token CSRF injetado em formularios de login/logout e CRUD do admin.
+- Security headers globais:
+	- `Content-Security-Policy`
+	- `X-Content-Type-Options: nosniff`
+	- `X-Frame-Options: SAMEORIGIN`
+	- `Referrer-Policy: strict-origin-when-cross-origin`
+	- `Permissions-Policy` restritiva para camera/microfone/geolocalizacao.
+- Error handler global com fallback:
+	- JSON padronizado para rotas `/api/*`
+	- pagina HTML amigavel para rotas web.
+
+## Deploy e operacao
+
+Checklist basico para ambiente de producao:
+1. Definir `APP_ENV=production` e `APP_DEBUG=false`.
+2. Definir credenciais fortes para `ADMIN_USER` e `ADMIN_PASS`.
+3. Publicar atras de HTTPS (necessario para cookie `Secure`).
+4. Executar migracoes e seed conforme estrategia de ambiente.
+5. Monitorar logs do PHP-FPM e Nginx para falhas 4xx/5xx.
+
+## Smoke tests manuais
+
+Fluxo recomendado antes de release:
+1. Login admin com credenciais validas e invalidas.
+2. Criar/editar projeto, pesquisa, pergunta e regra condicional.
+3. Abrir home, disparar gatilhos manuais e gatilho por fim de video.
+4. Enviar resposta pelo widget e confirmar persistencia no dashboard.
+5. Validar filtros do dashboard (projeto, gatilho e periodo).
+6. Testar logout e tentativa de acesso a `/admin` sem autenticacao.
+
 ## Referencias
 
 - Squeleton.dev: https://squeleton.dev
@@ -120,5 +155,5 @@ Depois acesse:
 
 ## Status atual
 
-- Fase 0 (fundacao tecnica) implementada.
-- Proximas entregas: modelagem completa do dominio NPS (Fase 1).
+- Fases 0 a 9 implementadas.
+- Fase 10 em andamento (hardening de seguranca e fallback global de erro aplicados).

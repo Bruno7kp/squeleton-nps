@@ -14,6 +14,7 @@
         hx-target="#admin-content"
         hx-swap="innerHTML"
     >
+        <?= \App\Support\Csrf::hiddenInput() ?>
         <label class="f-col f-gap-5" for="project-name">
             <span class="fw-600">Nome</span>
             <input id="project-name" class="form-control" type="text" name="name" value="<?= htmlspecialchars((string) ($project['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
