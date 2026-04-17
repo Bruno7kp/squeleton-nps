@@ -67,13 +67,13 @@ Criterio de aceite:
 - [x] Formulario respeita obrigatoriedade e regras condicionais.
 
 ## Fase 6 - API publica do widget
-- [ ] GET configuracao da pesquisa por chave+gatilho.
-- [ ] POST submissao de respostas.
-- [ ] Validacao server-side (tipos, required, regras basicas).
-- [ ] Captura de metadados: URL, gatilho, user/session id quando houver.
+- [x] GET configuracao da pesquisa por chave+gatilho.
+- [x] POST submissao de respostas.
+- [x] Validacao server-side (tipos, required, regras basicas).
+- [x] Captura de metadados: URL, gatilho, user/session id quando houver.
 
 Criterio de aceite:
-- [ ] API retorna schema e persiste resposta valida com metadados.
+- [x] API retorna schema e persiste resposta valida com metadados.
 
 ## Fase 7 - Widget embed com VanJS
 - [ ] Loader JS embutivel por script externo.
