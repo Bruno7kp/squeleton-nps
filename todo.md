@@ -19,7 +19,7 @@ Entregar uma plataforma NPS em producao com PHP Slim, SQLite, HTMX, VanJS e Sque
 - [x] Criar comando unico de setup (Makefile ou setup.sh).
 
 Criterio de aceite:
-- [ ] Projeto sobe com um unico comando e responde uma rota healthcheck.
+- [x] Projeto sobe com um unico comando e responde uma rota healthcheck.
 
 ## Fase 1 - Banco de dados e seed
 - [x] Modelar tabelas: admins, projects, surveys, questions, survey_rules, submissions, submission_answers.
@@ -40,21 +40,21 @@ Criterio de aceite:
 - [x] Usuario nao autenticado nao acessa /admin.
 
 ## Fase 3 - Gestao de projetos
-- [ ] Tela de listagem de projetos (HTMX).
-- [ ] Criacao e edicao de projeto.
-- [ ] Geracao de chave unica de integracao por projeto.
-- [ ] Exibir snippet basico de embed do widget por projeto.
+- [x] Tela de listagem de projetos (HTMX).
+- [x] Criacao e edicao de projeto.
+- [x] Geracao de chave unica de integracao por projeto.
+- [x] Exibir snippet basico de embed do widget por projeto.
 
 Criterio de aceite:
-- [ ] Projeto criado aparece na lista e possui chave valida.
+- [x] Projeto criado aparece na lista e possui chave valida.
 
 ## Fase 4 - Gestao de pesquisas
-- [ ] CRUD de pesquisas por projeto.
-- [ ] Configuracao de gatilhos: on_load, after_completed_video, before_cancel.
-- [ ] Definir status da pesquisa (rascunho/publicada).
+- [x] CRUD de pesquisas por projeto.
+- [x] Configuracao de gatilhos: on_load, after_completed_video, before_cancel.
+- [x] Definir status da pesquisa (rascunho/publicada).
 
 Criterio de aceite:
-- [ ] Pesquisa publicada pode ser carregada pela API do widget.
+- [x] Pesquisa publicada pode ser carregada pela API do widget.
 
 ## Fase 5 - Editor de perguntas e regras
 - [ ] CRUD de perguntas por pesquisa.

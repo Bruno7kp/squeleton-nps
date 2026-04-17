@@ -41,6 +41,22 @@
                     >
                         Dashboard Base
                     </button>
+                    <button
+                        class="btn alert-info text-left"
+                        hx-get="/admin/partials/projects"
+                        hx-target="#admin-content"
+                        hx-swap="innerHTML"
+                    >
+                        Projetos
+                    </button>
+                    <button
+                        class="btn alert-info text-left"
+                        hx-get="/admin/partials/surveys"
+                        hx-target="#admin-content"
+                        hx-swap="innerHTML"
+                    >
+                        Pesquisas
+                    </button>
                 </div>
             </aside>
         </div>

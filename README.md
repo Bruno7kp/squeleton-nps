@@ -49,7 +49,7 @@ cp .env.example .env
 
 2. Ajustar credenciais e parametros no arquivo .env.
 
-Se a porta 8080 ja estiver em uso, altere:
+Se a porta 8081 ja estiver em uso, altere:
 
 ```env
 APP_PORT=8081
