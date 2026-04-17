@@ -12,6 +12,8 @@
         <ul>
             <li>Health web: /health</li>
             <li>Health API: /api/health</li>
+            <li>Login admin: /login</li>
+            <li>Painel admin: /admin</li>
         </ul>
     </main>
 </body>

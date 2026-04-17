@@ -31,13 +31,13 @@ Criterio de aceite:
 - [x] Banco inicializa limpo e seed gera dados utilizaveis para demo.
 
 ## Fase 2 - Autenticacao e base do admin
-- [ ] Implementar login/logout via $_SESSION.
-- [ ] Middleware para proteger rotas /admin.
-- [ ] Layout base do admin com Squeleton.dev e HTMX.
-- [ ] Alertas de erro nativos + toast de sucesso (Toastify).
+- [x] Implementar login/logout via $_SESSION.
+- [x] Middleware para proteger rotas /admin.
+- [x] Layout base do admin com Squeleton.dev e HTMX.
+- [x] Alertas de erro nativos + toast de sucesso (Toastify).
 
 Criterio de aceite:
-- [ ] Usuario nao autenticado nao acessa /admin.
+- [x] Usuario nao autenticado nao acessa /admin.
 
 ## Fase 3 - Gestao de projetos
 - [ ] Tela de listagem de projetos (HTMX).
