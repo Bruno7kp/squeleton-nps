@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NPS Showcase | Squeleton.dev</title>
+    <title>Vitrine NPS | Squeleton.dev</title>
     <link rel="stylesheet" href="https://cdn.squeleton.dev/squeleton.v4.min.css">
     <script src="https://cdn.squeleton.dev/squeleton-main.v4.min.js"></script>
     <style>
@@ -76,15 +76,15 @@
         <section class="hero-shell p-25-all wow fadeInUp" data-wow-duration="0.8s">
             <div class="row gap-20 f-items-center">
                 <div class="c-xs-12 c-md-7">
-                    <p class="fw-700 ls-2 text-uppercase fs-4 m-0-b" style="color:var(--showcase-teal);">NPS Platform Showcase</p>
+                    <p class="fw-700 ls-2 text-uppercase fs-4 m-0-b" style="color:var(--showcase-teal);">Vitrine da Plataforma NPS</p>
                     <h1 class="fs-14 fw-800 lh-1-1 m-10-t m-0-b">Experiência NPS em tempo real com Squeleton.dev</h1>
                     <p class="fs-8 lh-1-6 m-15-t m-0-b" style="max-width: 58ch;">
                         Demonstre gatilhos de pesquisa, renderização dinâmica de widget e telemetria de respostas em uma única vitrine.
                     </p>
                     <div class="f-row f-gap-10 m-20-t xs-f-col xs-f-items-start">
-                        <button class="btn alert-info trigger-btn" data-trigger="on_load">Simular on_load</button>
-                        <button class="btn alert-info trigger-btn" data-trigger="before_cancel">Simular before_cancel</button>
-                        <button class="btn alert-info trigger-btn" data-trigger="after_completed_video">Simular after_completed_video</button>
+                        <button class="btn alert-info trigger-btn" data-trigger="on_load">Simular gatilho de carregamento</button>
+                        <button class="btn alert-info trigger-btn" data-trigger="before_cancel">Simular antes do cancelamento</button>
+                        <button class="btn alert-info trigger-btn" data-trigger="after_completed_video">Simular após concluir vídeo</button>
                     </div>
                 </div>
                 <div class="c-xs-12 c-md-5">
@@ -134,16 +134,16 @@
             <div class="embla" id="survey-carousel">
                 <div class="embla__container">
                     <article class="embla__slide showcase-card p-20-all">
-                        <h3 class="fs-8 fw-700 m-0-b">On Load - Primeira impressao</h3>
+                        <h3 class="fs-8 fw-700 m-0-b">No carregamento - Primeira impressão</h3>
                         <p class="m-10-t m-0-b">Capta o sentimento inicial nos primeiros segundos da sessão.</p>
                     </article>
                     <article class="embla__slide showcase-card p-20-all">
-                        <h3 class="fs-8 fw-700 m-0-b">After Completed Video</h3>
+                        <h3 class="fs-8 fw-700 m-0-b">Após concluir vídeo</h3>
                         <p class="m-10-t m-0-b">Dispara avaliação de valor percebido após consumir conteúdo.</p>
                     </article>
                     <article class="embla__slide showcase-card p-20-all">
-                        <h3 class="fs-8 fw-700 m-0-b">Before Cancel</h3>
-                        <p class="m-10-t m-0-b">Detecta risco de churn antes de encerrar assinatura.</p>
+                        <h3 class="fs-8 fw-700 m-0-b">Antes do cancelamento</h3>
+                        <p class="m-10-t m-0-b">Ajuda a reduzir a taxa de cancelamento antes de encerrar a assinatura.</p>
                     </article>
                 </div>
             </div>
@@ -151,7 +151,7 @@
 
         <section class="m-30-t wow fadeInUp" data-wow-delay="0.25s">
             <div class="showcase-card p-20-all">
-                <h2 class="fs-10 fw-800 m-0-b">Video trigger ao finalizar YouTube</h2>
+                <h2 class="fs-10 fw-800 m-0-b">Disparo ao finalizar vídeo no YouTube</h2>
                 <p class="m-10-t m-15-b">Ao terminar o video, o gatilho <strong>after_completed_video</strong> abre o widget automaticamente.</p>
                 <div id="yt-player" style="width:100%;max-width:960px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#111;"></div>
             </div>

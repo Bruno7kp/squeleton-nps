@@ -87,6 +87,16 @@
             '.npsw-input,.npsw-select,.npsw-textarea{width:100%;padding:10px;border:1px solid #c8d8d3;border-radius:8px;background:#fff}' +
             '.npsw-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}' +
             '.npsw-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid #cbd6e2;border-radius:999px;background:#f8fbff}' +
+            '.npsw-scale{display:flex;gap:8px;flex-wrap:wrap}' +
+            '.npsw-scale-btn{border:1px solid #c8d8d3;background:#fff;color:#1f2f2a;border-radius:8px;padding:8px 10px;min-width:42px;cursor:pointer;font-weight:700}' +
+            '.npsw-scale-btn:hover{background:#f2f8f6}' +
+            '.npsw-scale-btn.is-active{background:#0a7b68;border-color:#0a7b68;color:#fff}' +
+            '.npsw-star-btn{font-size:22px;line-height:1;min-width:40px;padding:8px 8px;color:#9aa9b5}' +
+            '.npsw-star-zero{font-size:18px;line-height:1;color:#1f2f2a}' +
+            '.npsw-star-btn.is-filled{color:#f4b400;border-color:#f2d26a;background:#fff8db}' +
+            '.npsw-star-btn.is-active{color:#f4b400;border-color:#e0b325;background:#ffe9a8}' +
+            '.npsw-star-zero.is-filled{color:#0a7b68;border-color:#0a7b68;background:#e7faf5}' +
+            '.npsw-star-zero.is-active{color:#0a7b68;border-color:#0a7b68;background:#d5f4ec}' +
             '.npsw-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:20px}' +
             '.npsw-btn{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}' +
             '.npsw-btn-main{background:#0a7b68;color:#fff}' +
@@ -280,17 +290,51 @@
             }));
         }
 
-        if (question.question_type === 'score_0_10' || question.question_type === 'stars_0_5') {
-            return wrap(tags.input({
-                id: id,
-                class: 'npsw-input',
-                type: 'number',
-                min: question.scale_min != null ? String(question.scale_min) : '0',
-                max: question.scale_max != null ? String(question.scale_max) : '10',
-                step: '1',
-                value: currentValue != null ? String(currentValue) : '',
-                oninput: function (e) { setAnswer(question.field_name, e.target.value); }
-            }));
+        if (question.question_type === 'score_0_10') {
+            var minScore = question.scale_min != null ? Number(question.scale_min) : 0;
+            var maxScore = question.scale_max != null ? Number(question.scale_max) : 10;
+            var scoreButtons = [];
+
+            for (var score = minScore; score <= maxScore; score++) {
+                (function (scoreValue) {
+                    var selected = currentValue != null && Number(currentValue) === scoreValue;
+                    scoreButtons.push(tags.button({
+                        id: scoreValue === minScore ? id : null,
+                        type: 'button',
+                        class: 'npsw-scale-btn' + (selected ? ' is-active' : ''),
+                        'aria-pressed': selected ? 'true' : 'false',
+                        title: 'Nota ' + scoreValue,
+                        onclick: function () { setAnswer(question.field_name, String(scoreValue)); }
+                    }, String(scoreValue)));
+                })(score);
+            }
+
+            return wrap(tags.div({ class: 'npsw-scale', role: 'group', 'aria-label': question.label }, scoreButtons));
+        }
+
+        if (question.question_type === 'stars_0_5') {
+            var minStars = question.scale_min != null ? Number(question.scale_min) : 0;
+            var maxStars = question.scale_max != null ? Number(question.scale_max) : 5;
+            var starsButtons = [];
+            var selectedStars = currentValue != null ? Number(currentValue) : null;
+
+            for (var star = minStars; star <= maxStars; star++) {
+                (function (starValue) {
+                    var isSelected = selectedStars === starValue;
+                    var filled = selectedStars != null && selectedStars >= starValue;
+                    var starLabel = starValue === 0 ? (filled ? '●' : '○') : (filled ? '★' : '☆');
+                    starsButtons.push(tags.button({
+                        id: starValue === minStars ? id : null,
+                        type: 'button',
+                        class: 'npsw-scale-btn npsw-star-btn' + (starValue === 0 ? ' npsw-star-zero' : '') + (filled ? ' is-filled' : '') + (isSelected ? ' is-active' : ''),
+                        'aria-pressed': isSelected ? 'true' : 'false',
+                        onclick: function () { setAnswer(question.field_name, String(starValue)); },
+                        title: starValue === 0 ? '0 estrela' : (String(starValue) + ' estrela' + (starValue === 1 ? '' : 's'))
+                    }, starLabel));
+                })(star);
+            }
+
+            return wrap(tags.div({ class: 'npsw-scale', role: 'group', 'aria-label': question.label }, starsButtons));
         }
 
         if (question.question_type === 'select') {
