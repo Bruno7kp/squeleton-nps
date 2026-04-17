@@ -22,13 +22,13 @@ Criterio de aceite:
 - [ ] Projeto sobe com um unico comando e responde uma rota healthcheck.
 
 ## Fase 1 - Banco de dados e seed
-- [ ] Modelar tabelas: admins, projects, surveys, questions, survey_rules, submissions, submission_answers.
-- [ ] Criar migracoes idempotentes.
-- [ ] Criar seed com dados realistas (projeto, pesquisas, perguntas e respostas).
-- [ ] Garantir indices minimos para consultas de dashboard.
+- [x] Modelar tabelas: admins, projects, surveys, questions, survey_rules, submissions, submission_answers.
+- [x] Criar migracoes idempotentes.
+- [x] Criar seed com dados realistas (projeto, pesquisas, perguntas e respostas).
+- [x] Garantir indices minimos para consultas de dashboard.
 
 Criterio de aceite:
-- [ ] Banco inicializa limpo e seed gera dados utilizaveis para demo.
+- [x] Banco inicializa limpo e seed gera dados utilizaveis para demo.
 
 ## Fase 2 - Autenticacao e base do admin
 - [ ] Implementar login/logout via $_SESSION.
