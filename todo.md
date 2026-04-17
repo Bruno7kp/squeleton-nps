@@ -76,14 +76,14 @@ Criterio de aceite:
 - [x] API retorna schema e persiste resposta valida com metadados.
 
 ## Fase 7 - Widget embed com VanJS
-- [ ] Loader JS embutivel por script externo.
-- [ ] Renderizacao dinamica do formulario via schema.
-- [ ] Aplicacao de logica condicional no cliente.
-- [ ] Abertura em modal (a11y-dialog/VenoBox conforme padrao do projeto).
-- [ ] Tratamento de sucesso/erro com feedback visual.
+- [x] Loader JS embutivel por script externo.
+- [x] Renderizacao dinamica do formulario via schema.
+- [x] Aplicacao de logica condicional no cliente.
+- [x] Abertura em modal (a11y-dialog/VenoBox conforme padrao do projeto).
+- [x] Tratamento de sucesso/erro com feedback visual.
 
 Criterio de aceite:
-- [ ] Widget roda em pagina externa e salva respostas no backend.
+- [x] Widget roda em pagina externa e salva respostas no backend.
 
 ## Fase 8 - Home showcase
 - [ ] Criar hero e secoes de vitrine com classes Squeleton.

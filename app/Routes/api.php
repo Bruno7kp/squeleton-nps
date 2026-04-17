@@ -10,12 +10,27 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 
 return static function (App $app): void {
-    $json = static function (Response $response, array $payload, int $status = 200): Response {
-        $response->getBody()->write((string) json_encode($payload));
+    $withCors = static function (Response $response): Response {
         return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    };
+
+    $json = static function (Response $response, array $payload, int $status = 200) use ($withCors): Response {
+        $response->getBody()->write((string) json_encode($payload));
+        return $withCors($response)
             ->withStatus($status)
             ->withHeader('Content-Type', 'application/json');
     };
+
+    $app->options('/api/widget/survey', static function (Request $request, Response $response) use ($withCors): Response {
+        return $withCors($response)->withStatus(204);
+    });
+
+    $app->options('/api/widget/submissions', static function (Request $request, Response $response) use ($withCors): Response {
+        return $withCors($response)->withStatus(204);
+    });
 
     $loadSurveySchema = static function (int $surveyId): array {
         $questionsStmt = Database::connection()->prepare(
