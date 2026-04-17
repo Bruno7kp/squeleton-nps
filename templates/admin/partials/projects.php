@@ -3,11 +3,11 @@
         <div class="f-row f-items-center f-justify-between xs-f-col xs-f-items-start">
             <div>
                 <h2 class="fs-10 fw-700 m-0-b">Projetos</h2>
-                <p class="m-10-t m-0-b">Gerencie projetos e chaves de integracao do widget.</p>
+                    <p class="m-10-t m-0-b">Gerencie projetos e chaves de integração do widget.</p>
             </div>
             <button
                 class="btn alert-success xs-m-15-t"
-                hx-get="/admin/projects/form"
+                                        <th class="text-right">Ações</th>
                 hx-target="#project-form-panel"
                 hx-swap="innerHTML"
             >
@@ -38,7 +38,7 @@
                                     <th>Slug</th>
                                     <th>Chave</th>
                                     <th>Status</th>
-                                    <th class="text-right">Acoes</th>
+                                    <th class="text-right">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -67,7 +67,7 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </tbody>
-                        </table>
+                                    <p class="m-10-t m-0-b">Clique em "Novo Projeto" para abrir o formulário.</p>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
             <div class="c-xs-12 c-lg-5">
                 <div id="project-form-panel" class="card p-20-all">
                     <h3 class="fs-8 fw-700 m-0-b">Criar Projeto</h3>
-                    <p class="m-10-t m-0-b">Clique em "Novo Projeto" para abrir o formulario.</p>
+                    <p class="m-10-t m-0-b">Clique em "Novo Projeto" para abrir o formulário.</p>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@
                                     <th>Nome</th>
                                     <th>Gatilho</th>
                                     <th>Status</th>
-                                    <th class="text-right">Acoes</th>
+                                       <th class="text-right">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +83,7 @@
             <div class="c-xs-12 c-lg-5">
                 <div id="survey-form-panel" class="card p-20-all">
                     <h3 class="fs-8 fw-700 m-0-b">Criar Pesquisa</h3>
-                    <p class="m-10-t m-0-b">Clique em "Nova Pesquisa" para abrir o formulario.</p>
+                        <p class="m-10-t m-0-b">Clique em "Nova Pesquisa" para abrir o formulário.</p>
                 </div>
             </div>
         </div>

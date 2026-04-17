@@ -52,7 +52,7 @@
                                     <th>Campo</th>
                                     <th>Tipo</th>
                                     <th>Obrig.</th>
-                                    <th class="text-right">Acoes</th>
+                                    <th class="text-right">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,7 +69,7 @@
                                                 <small><?= htmlspecialchars((string) $question['label'], ENT_QUOTES, 'UTF-8') ?></small>
                                             </td>
                                             <td><?= htmlspecialchars((string) $question['question_type'], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= ((int) $question['is_required'] === 1) ? 'Sim' : 'Nao' ?></td>
+                                            <td><?= ((int) $question['is_required'] === 1) ? 'Sim' : 'Não' ?></td>
                                             <td class="text-right">
                                                 <div class="f-row f-gap-5 f-justify-end">
                                                     <form hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
@@ -132,7 +132,7 @@
                             </div>
                             <div class="c-xs-12 c-md-4">
                                 <label class="f-col f-gap-5" for="rule-action">
-                                    <span class="fw-600">Acao</span>
+                                    <span class="fw-600">Ação</span>
                                     <select id="rule-action" class="form-control" name="action" required>
                                         <option value="show">show</option>
                                     </select>
@@ -159,8 +159,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Condicao</th>
-                                    <th>Acao</th>
-                                    <th class="text-right">Acoes</th>
+                                    <th>Ação</th>
+                                    <th class="text-right">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -200,7 +200,7 @@
             <div class="c-xs-12 c-lg-5">
                 <div id="question-form-panel" class="card p-20-all">
                     <h3 class="fs-8 fw-700 m-0-b">Nova Pergunta</h3>
-                    <p class="m-10-t m-0-b">Clique em "Nova Pergunta" para abrir o formulario.</p>
+                    <p class="m-10-t m-0-b">Clique em "Nova Pergunta" para abrir o formulário.</p>
                 </div>
             </div>
         </div>

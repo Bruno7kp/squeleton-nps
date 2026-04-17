@@ -60,12 +60,12 @@
         </label>
 
         <label class="f-col f-gap-5" for="survey-title">
-            <span class="fw-600">Titulo exibido</span>
+            <span class="fw-600">Título exibido</span>
             <input id="survey-title" class="form-control" type="text" name="title" value="<?= htmlspecialchars((string) ($survey['title'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
         </label>
 
         <label class="f-col f-gap-5" for="survey-description">
-            <span class="fw-600">Descricao</span>
+            <span class="fw-600">Descrição</span>
             <textarea id="survey-description" class="form-control" name="description" rows="3"><?= htmlspecialchars((string) ($survey['description'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
         </label>
 

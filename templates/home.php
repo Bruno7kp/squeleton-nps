@@ -77,9 +77,9 @@
             <div class="row gap-20 f-items-center">
                 <div class="c-xs-12 c-md-7">
                     <p class="fw-700 ls-2 text-uppercase fs-4 m-0-b" style="color:var(--showcase-teal);">NPS Platform Showcase</p>
-                    <h1 class="fs-14 fw-800 lh-1-1 m-10-t m-0-b">Experiencia NPS em tempo real com Squeleton.dev</h1>
+                    <h1 class="fs-14 fw-800 lh-1-1 m-10-t m-0-b">Experiência NPS em tempo real com Squeleton.dev</h1>
                     <p class="fs-8 lh-1-6 m-15-t m-0-b" style="max-width: 58ch;">
-                        Demonstre gatilhos de pesquisa, renderizacao dinamica de widget e telemetria de respostas em uma unica vitrine.
+                        Demonstre gatilhos de pesquisa, renderização dinâmica de widget e telemetria de respostas em uma única vitrine.
                     </p>
                     <div class="f-row f-gap-10 m-20-t xs-f-col xs-f-items-start">
                         <button class="btn alert-info trigger-btn" data-trigger="on_load">Simular on_load</button>
@@ -89,7 +89,7 @@
                 </div>
                 <div class="c-xs-12 c-md-5">
                     <div class="pattern-grid p-20-all">
-                        <h2 class="fs-9 fw-700 m-0-b">Acesso rapido</h2>
+                        <h2 class="fs-9 fw-700 m-0-b">Acesso rápido</h2>
                         <ul class="m-10-t m-0-b p-20-l">
                             <li>Health web: /health</li>
                             <li>Health API: /api/health</li>
@@ -122,24 +122,24 @@
             </div>
             <div class="c-xs-12 c-sm-6 c-lg-3">
                 <div class="metric-box p-15-all">
-                    <p class="text-uppercase fw-700 fs-4 m-0-b">Media NPS</p>
+                    <p class="text-uppercase fw-700 fs-4 m-0-b">Média NPS</p>
                     <p class="fs-12 fw-800 m-10-t m-0-b"><span data-counter="avg_nps">0</span></p>
                 </div>
             </div>
         </section>
 
         <section class="m-30-t wow fadeInUp" data-wow-delay="0.2s">
-            <h2 class="fs-11 fw-800 m-0-b">Demonstracao de pesquisas</h2>
+            <h2 class="fs-11 fw-800 m-0-b">Demonstração de pesquisas</h2>
             <p class="m-8-t m-15-b">Slides de modelos de abordagem para diferentes gatilhos.</p>
             <div class="embla" id="survey-carousel">
                 <div class="embla__container">
                     <article class="embla__slide showcase-card p-20-all">
                         <h3 class="fs-8 fw-700 m-0-b">On Load - Primeira impressao</h3>
-                        <p class="m-10-t m-0-b">Capta o sentimento inicial nos primeiros segundos da sessao.</p>
+                        <p class="m-10-t m-0-b">Capta o sentimento inicial nos primeiros segundos da sessão.</p>
                     </article>
                     <article class="embla__slide showcase-card p-20-all">
                         <h3 class="fs-8 fw-700 m-0-b">After Completed Video</h3>
-                        <p class="m-10-t m-0-b">Dispara avaliacao de valor percebido apos consumir conteudo.</p>
+                        <p class="m-10-t m-0-b">Dispara avaliação de valor percebido após consumir conteúdo.</p>
                     </article>
                     <article class="embla__slide showcase-card p-20-all">
                         <h3 class="fs-8 fw-700 m-0-b">Before Cancel</h3>

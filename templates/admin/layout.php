@@ -13,11 +13,11 @@
         <div class="row f-items-center f-justify-between">
             <div class="c-xs-12 c-md-auto">
                 <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
-                <p class="fs-5 m-5-t m-0-b">Gestao inicial da plataforma</p>
+                <p class="fs-5 m-5-t m-0-b">Gestão inicial da plataforma</p>
             </div>
             <div class="c-xs-12 c-md-auto xs-m-15-t">
                 <div class="f-row f-items-center f-gap-10 xs-f-col xs-f-items-start">
-                    <span class="fs-5 fw-600">Usuario: <?= htmlspecialchars((string) (($user['username'] ?? 'admin')), ENT_QUOTES, 'UTF-8') ?></span>
+                    <span class="fs-5 fw-600">Usuário: <?= htmlspecialchars((string) (($user['username'] ?? 'admin')), ENT_QUOTES, 'UTF-8') ?></span>
                     <form method="post" action="/logout">
                         <?= \App\Support\Csrf::hiddenInput() ?>
                         <button class="btn alert-danger" type="submit">Sair</button>

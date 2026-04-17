@@ -163,7 +163,7 @@ return static function (App $app): void {
             $project = $repository->findById((int) ($args['id'] ?? 0));
 
             if ($project === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Projeto nao encontrado.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Projeto não encontrado.</div>');
                 return $response->withStatus(404);
             }
 
@@ -188,7 +188,7 @@ return static function (App $app): void {
             if ($name === '' || $slug === '') {
                 $content = $renderTemplate('admin/partials/projects.php', [
                     'projects' => $repository->listAll(),
-                    'errorMessage' => 'Nome e slug sao obrigatorios.',
+                    'errorMessage' => 'Nome e slug sao obrigatórios.',
                     'flashMessages' => Flash::pull(),
                 ]);
 
@@ -199,7 +199,7 @@ return static function (App $app): void {
             if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
                 $content = $renderTemplate('admin/partials/projects.php', [
                     'projects' => $repository->listAll(),
-                    'errorMessage' => 'Slug invalido. Use apenas letras minusculas, numeros e hifen.',
+                    'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
                     'flashMessages' => Flash::pull(),
                 ]);
 
@@ -246,7 +246,7 @@ return static function (App $app): void {
             $project = $repository->findById($id);
 
             if ($project === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Projeto nao encontrado.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Projeto não encontrado.</div>');
                 return $response->withStatus(404);
             }
 
@@ -259,7 +259,7 @@ return static function (App $app): void {
             if ($name === '' || $slug === '') {
                 $content = $renderTemplate('admin/partials/projects.php', [
                     'projects' => $repository->listAll(),
-                    'errorMessage' => 'Nome e slug sao obrigatorios.',
+                    'errorMessage' => 'Nome e slug sao obrigatórios.',
                     'flashMessages' => Flash::pull(),
                 ]);
 
@@ -270,7 +270,7 @@ return static function (App $app): void {
             if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
                 $content = $renderTemplate('admin/partials/projects.php', [
                     'projects' => $repository->listAll(),
-                    'errorMessage' => 'Slug invalido. Use apenas letras minusculas, numeros e hifen.',
+                    'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
                     'flashMessages' => Flash::pull(),
                 ]);
 
@@ -351,7 +351,7 @@ return static function (App $app): void {
             $survey = $surveyRepository->findById((int) ($args['id'] ?? 0));
 
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -385,7 +385,7 @@ return static function (App $app): void {
             if ($selectedProject === null || $name === '' || $slug === '') {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Projeto, nome e slug sao obrigatorios.',
+                    'errorMessage' => 'Projeto, nome e slug sao obrigatórios.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -395,7 +395,7 @@ return static function (App $app): void {
             if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Slug invalido. Use apenas letras minusculas, numeros e hifen.',
+                    'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -405,7 +405,7 @@ return static function (App $app): void {
             if (!in_array($status, $statusOptions, true)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Status invalido. Use draft ou published.',
+                    'errorMessage' => 'Status inválido. Use draft ou published.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -415,7 +415,7 @@ return static function (App $app): void {
             if (!in_array($triggerEvent, $triggerOptions, true)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Gatilho invalido.',
+                    'errorMessage' => 'Gatilho inválido.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -460,7 +460,7 @@ return static function (App $app): void {
             $id = (int) ($args['id'] ?? 0);
             $existing = $surveyRepository->findById($id);
             if ($existing === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -478,7 +478,7 @@ return static function (App $app): void {
             if ($selectedProject === null || $name === '' || $slug === '') {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Projeto, nome e slug sao obrigatorios.',
+                    'errorMessage' => 'Projeto, nome e slug sao obrigatórios.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -488,7 +488,7 @@ return static function (App $app): void {
             if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Slug invalido. Use apenas letras minusculas, numeros e hifen.',
+                    'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -498,7 +498,7 @@ return static function (App $app): void {
             if (!in_array($status, $statusOptions, true)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Status invalido. Use draft ou published.',
+                    'errorMessage' => 'Status inválido. Use draft ou published.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -508,7 +508,7 @@ return static function (App $app): void {
             if (!in_array($triggerEvent, $triggerOptions, true)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Gatilho invalido.',
+                    'errorMessage' => 'Gatilho inválido.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -554,7 +554,7 @@ return static function (App $app): void {
 
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -580,7 +580,7 @@ return static function (App $app): void {
             $surveyRepository = new SurveyRepository();
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -610,13 +610,13 @@ return static function (App $app): void {
             $question = $questionRepository->findById((int) ($args['id'] ?? 0));
 
             if ($question === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
             $survey = $surveyRepository->findById((int) $question['survey_id']);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -640,7 +640,7 @@ return static function (App $app): void {
             $surveyId = (int) ($input['survey_id'] ?? 0);
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -664,7 +664,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Label, campo tecnico e tipo sao obrigatorios.',
+                    'errorMessage' => 'Label, campo técnico e tipo sao obrigatórios.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -678,7 +678,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Campo tecnico invalido. Use letras minusculas, numeros e underscore, iniciando por letra.',
+                    'errorMessage' => 'Campo técnico inválido. Use letras minusculas, numeros e underscore, iniciando por letra.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -692,7 +692,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Tipo de pergunta invalido.',
+                    'errorMessage' => 'Tipo de pergunta inválido.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -706,7 +706,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Ja existe pergunta com este campo tecnico nesta pesquisa.',
+                    'errorMessage' => 'Ja existe pergunta com este campo técnico nesta pesquisa.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -772,14 +772,14 @@ return static function (App $app): void {
             $ruleRepository = new SurveyRuleRepository();
             $question = $questionRepository->findById((int) ($args['id'] ?? 0));
             if ($question === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
             $surveyId = (int) $question['survey_id'];
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -803,7 +803,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Label, campo tecnico e tipo sao obrigatorios.',
+                    'errorMessage' => 'Label, campo técnico e tipo sao obrigatórios.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -817,7 +817,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Campo tecnico invalido. Use letras minusculas, numeros e underscore, iniciando por letra.',
+                    'errorMessage' => 'Campo técnico inválido. Use letras minusculas, numeros e underscore, iniciando por letra.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -831,7 +831,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Tipo de pergunta invalido.',
+                    'errorMessage' => 'Tipo de pergunta inválido.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -845,7 +845,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Ja existe pergunta com este campo tecnico nesta pesquisa.',
+                    'errorMessage' => 'Ja existe pergunta com este campo técnico nesta pesquisa.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -910,14 +910,14 @@ return static function (App $app): void {
             $ruleRepository = new SurveyRuleRepository();
             $question = $questionRepository->findById((int) ($args['id'] ?? 0));
             if ($question === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
             $surveyId = (int) $question['survey_id'];
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -943,14 +943,14 @@ return static function (App $app): void {
             $ruleRepository = new SurveyRuleRepository();
             $question = $questionRepository->findById((int) ($args['id'] ?? 0));
             if ($question === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pergunta não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
             $surveyId = (int) $question['survey_id'];
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -982,7 +982,7 @@ return static function (App $app): void {
             $surveyId = (int) ($input['survey_id'] ?? 0);
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 
@@ -1016,7 +1016,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Origem e destino da regra nao podem ser iguais.',
+                    'errorMessage' => 'Origem e destino da regra não podem ser iguais.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -1030,7 +1030,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Operador invalido ou valor de comparacao vazio.',
+                    'errorMessage' => 'Operador inválido ou valor de comparacao vazio.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -1044,7 +1044,7 @@ return static function (App $app): void {
                     'rules' => $ruleRepository->listBySurvey($surveyId),
                     'questionTypeOptions' => $questionTypeOptions,
                     'ruleOperatorOptions' => $ruleOperatorOptions,
-                    'errorMessage' => 'Acao invalida. Apenas show suportado nesta fase.',
+                    'errorMessage' => 'Ação invalida. Apenas show suportado nesta fase.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -1082,7 +1082,7 @@ return static function (App $app): void {
             $surveyId = (int) (((array) $request->getParsedBody())['survey_id'] ?? 0);
             $survey = $surveyRepository->findById($surveyId);
             if ($survey === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa nao encontrada.</div>');
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Pesquisa não encontrada.</div>');
                 return $response->withStatus(404);
             }
 

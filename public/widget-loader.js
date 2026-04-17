@@ -241,7 +241,7 @@
         visibleQuestions().forEach(function (question) {
             var value = inputValue(question);
             if (Number(question.is_required) === 1 && !hasValue(value)) {
-                state.errors[question.field_name] = 'Campo obrigatorio.';
+                state.errors[question.field_name] = 'Campo obrigatório.';
                 valid = false;
             }
         });
@@ -362,6 +362,16 @@
             return;
         }
 
+        var activeEl = document.activeElement;
+        var focusSnapshot = null;
+        if (activeEl && widgetRootEl.contains(activeEl) && activeEl.id) {
+            focusSnapshot = {
+                id: activeEl.id,
+                selectionStart: typeof activeEl.selectionStart === 'number' ? activeEl.selectionStart : null,
+                selectionEnd: typeof activeEl.selectionEnd === 'number' ? activeEl.selectionEnd : null,
+            };
+        }
+
         var tags = van.tags;
         var root = widgetRootEl;
         root.innerHTML = '';
@@ -376,7 +386,7 @@
                 tags.div({ class: 'npsw-body' },
                     state.submitError
                         ? tags.div({ class: 'npsw-error' }, state.submitError)
-                        : tags.div({ class: 'npsw-error' }, 'Pesquisa indisponivel no momento.')
+                        : tags.div({ class: 'npsw-error' }, 'Pesquisa indisponível no momento.')
                 )
             );
             return;
@@ -412,7 +422,7 @@
                 .then(function (response) { return response.json(); })
                 .then(function (result) {
                     if (!result.success) {
-                        state.submitError = 'Nao foi possivel enviar sua resposta.';
+                        state.submitError = 'Não foi possível enviar sua resposta.';
                         if (result.errors && typeof result.errors === 'object') {
                             state.errors = result.errors;
                         }
@@ -428,7 +438,7 @@
                     render();
                 })
                 .catch(function () {
-                    state.submitError = 'Falha de comunicacao ao enviar respostas.';
+                    state.submitError = 'Falha de comunicação ao enviar respostas.';
                     state.submitting = false;
                     render();
                 });
@@ -451,6 +461,20 @@
                 )
             )
         );
+
+        if (focusSnapshot) {
+            var nextFocusEl = document.getElementById(focusSnapshot.id);
+            if (nextFocusEl && widgetRootEl.contains(nextFocusEl)) {
+                nextFocusEl.focus();
+                if (
+                    focusSnapshot.selectionStart !== null &&
+                    focusSnapshot.selectionEnd !== null &&
+                    typeof nextFocusEl.setSelectionRange === 'function'
+                ) {
+                    nextFocusEl.setSelectionRange(focusSnapshot.selectionStart, focusSnapshot.selectionEnd);
+                }
+            }
+        }
     }
 
     function ensureDialog() {
@@ -458,7 +482,7 @@
 
         var wrapper = document.createElement('div');
         wrapper.innerHTML = '' +
-            '<button type="button" class="npsw-open-btn" id="' + widgetId + '-open">Avaliar experiencia</button>' +
+            '<button type="button" class="npsw-open-btn" id="' + widgetId + '-open">Avaliar experiência</button>' +
             '<div id="' + dialogId + '" class="npsw-dialog" aria-hidden="true" aria-labelledby="' + dialogId + '-title" data-a11y-dialog="true">' +
                 '<div class="npsw-backdrop" data-a11y-dialog-hide></div>' +
                 '<div class="npsw-panel" role="document">' +
@@ -540,7 +564,7 @@
                 .then(function () {})
                 .catch(function () {
                     state.loading = false;
-                    state.submitError = 'Nao foi possivel carregar a pesquisa para este gatilho.';
+                    state.submitError = 'Não foi possível carregar a pesquisa para este gatilho.';
                     render();
                 });
         };
@@ -556,7 +580,7 @@
                 ensureDialog();
                 return loadSurvey(activeTriggerEvent).catch(function () {
                     state.loading = false;
-                    state.submitError = 'Nao foi possivel carregar a pesquisa inicial.';
+                    state.submitError = 'Não foi possível carregar a pesquisa inicial.';
                     render();
                 });
             })

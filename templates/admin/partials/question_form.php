@@ -25,7 +25,7 @@
         </label>
 
         <label class="f-col f-gap-5" for="question-field-name">
-            <span class="fw-600">Campo tecnico (field_name)</span>
+            <span class="fw-600">Campo técnico (field_name)</span>
             <input id="question-field-name" class="form-control" type="text" name="field_name" value="<?= htmlspecialchars((string) ($question['field_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="nps_score" required>
         </label>
 
@@ -42,7 +42,7 @@
 
         <label class="f-row f-items-center f-gap-10" for="question-required">
             <input id="question-required" type="checkbox" name="is_required" value="1" <?= ((int) ($question['is_required'] ?? 0) === 1) ? 'checked' : '' ?>>
-            <span>Pergunta obrigatoria</span>
+            <span>Pergunta obrigatória</span>
         </label>
 
         <label class="f-col f-gap-5" for="question-placeholder">
@@ -56,7 +56,7 @@
         </label>
 
         <label class="f-col f-gap-5" for="question-options">
-            <span class="fw-600">Opcoes (uma por linha para select/checkbox/radio)</span>
+            <span class="fw-600">Opções (uma por linha para select/checkbox/radio)</span>
             <textarea id="question-options" class="form-control" name="options_text" rows="4"><?= htmlspecialchars((string) implode(PHP_EOL, $question['options'] ?? []), ENT_QUOTES, 'UTF-8') ?></textarea>
         </label>
 

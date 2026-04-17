@@ -32,7 +32,7 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
         >
             <div class="f-row f-items-center f-gap-8 m-0-b m-10-b">
                 <span class="iccon-settings-1"></span>
-                <strong>Filtros basicos</strong>
+                <strong>Filtros básicos</strong>
             </div>
 
             <div class="row gap-10">
@@ -114,7 +114,7 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
                 <div class="card p-15-all">
                     <p class="fs-4 fw-700 text-uppercase ls-1 m-0-b">
                         <span class="iccon-star-1"></span>
-                        Media NPS
+                        Média NPS
                     </p>
                     <p class="fs-12 fw-700 m-10-t m-0-b" data-counter-value="<?= (float) (($metrics['avg_nps'] ?? 0.0)) ?>" data-counter-decimals="2">
                         <?= $metrics['avg_nps'] === null ? '0.00' : number_format((float) $metrics['avg_nps'], 2, '.', '') ?>
@@ -126,13 +126,13 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
                 <div class="card p-15-all">
                     <p class="fs-4 fw-700 text-uppercase ls-1 m-0-b">
                         <span class="iccon-check-1"></span>
-                        Taxa de conclusao
+                        Taxa de conclusão
                     </p>
                     <p class="fs-12 fw-700 m-10-t m-0-b" data-counter-value="<?= (float) ($metrics['completion_rate'] ?? 0.0) ?>" data-counter-decimals="2">
                         <?= number_format((float) ($metrics['completion_rate'] ?? 0), 2, '.', '') ?>%
                     </p>
                     <small class="m-5-t" style="display:block; opacity:.75;">
-                        <?= (int) ($metrics['completed_submissions'] ?? 0) ?> concluidas de <?= (int) ($metrics['total_submissions'] ?? 0) ?>
+                        <?= (int) ($metrics['completed_submissions'] ?? 0) ?> concluídas de <?= (int) ($metrics['total_submissions'] ?? 0) ?>
                     </small>
                 </div>
             </article>
@@ -171,7 +171,7 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
                                 <td><?= htmlspecialchars((string) ($submission['trigger_event'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= $submission['score_nps'] === null ? '-' : (int) $submission['score_nps'] ?></td>
                                 <td>
-                                    <?= ((int) ($submission['is_completed'] ?? 0) === 1) ? 'Concluida' : 'Incompleta' ?>
+                                    <?= ((int) ($submission['is_completed'] ?? 0) === 1) ? 'Concluída' : 'Incompleta' ?>
                                 </td>
                                 <td><?= htmlspecialchars((string) ($submission['created_at'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></td>
                             </tr>
