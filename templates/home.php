@@ -5,71 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vitrine NPS | Squeleton.dev</title>
     <link rel="stylesheet" href="https://cdn.squeleton.dev/squeleton.v4.min.css">
+    <link rel="stylesheet" href="/home.css">
     <script src="https://cdn.squeleton.dev/squeleton-main.v4.min.js"></script>
-    <style>
-        :root {
-            --showcase-ink: #132127;
-            --showcase-teal: #0f7e6c;
-            --showcase-cyan: #39b6c5;
-            --showcase-bg-soft: #f6fbff;
-        }
-
-        body {
-            background: radial-gradient(circle at 80% 10%, #d9fbff 0%, rgba(217, 251, 255, 0) 38%),
-                        radial-gradient(circle at 10% 30%, #e8f9ef 0%, rgba(232, 249, 239, 0) 40%),
-                        linear-gradient(180deg, #ffffff 0%, var(--showcase-bg-soft) 100%);
-            color: var(--showcase-ink);
-        }
-
-        .hero-shell {
-            border: 1px solid #e2eff6;
-            border-radius: 18px;
-            background: linear-gradient(145deg, #ffffff 0%, #f0fcff 50%, #ecfff7 100%);
-            box-shadow: 0 22px 40px rgba(12, 41, 56, 0.12);
-        }
-
-        .pattern-grid {
-            background-image: linear-gradient(rgba(17, 80, 97, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 80, 97, 0.08) 1px, transparent 1px);
-            background-size: 22px 22px;
-            border-radius: 14px;
-        }
-
-        .metric-box {
-            border: 1px solid #dce9f3;
-            border-radius: 12px;
-            background: #ffffff;
-        }
-
-        .showcase-card {
-            border: 1px solid #dce9f3;
-            border-radius: 14px;
-            background: #ffffff;
-        }
-
-        .trigger-btn {
-            border-radius: 999px;
-        }
-
-        .embla {
-            overflow: hidden;
-        }
-
-        .embla__container {
-            display: flex;
-            gap: 14px;
-        }
-
-        .embla__slide {
-            flex: 0 0 82%;
-            min-width: 0;
-        }
-
-        @media (min-width: 992px) {
-            .embla__slide {
-                flex: 0 0 42%;
-            }
-        }
-    </style>
 </head>
 <body>
     <main class="container p-30-t p-40-b">
