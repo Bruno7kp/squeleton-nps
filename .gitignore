@@ -6,6 +6,10 @@ node_modules/
 database/*.sqlite
 !database/.gitkeep
 
+# Temporary files
+*.tmp
+todo.md
+
 # OS/editor
 .DS_Store
 Thumbs.db

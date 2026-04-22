@@ -287,6 +287,14 @@ return static function (App $app): void {
             ], 422);
         }
 
+        if (!preg_match('/^nps_pk_[a-zA-Z0-9_]+$/', $publicKey)) {
+            return $json($response, [
+                'success' => false,
+                'data' => null,
+                'errors' => ['Chave de projeto invalida.'],
+            ], 422);
+        }
+
         $repository = new SurveyRepository();
         $survey = $repository->findPublishedByProjectKeyAndTrigger($publicKey, $triggerEvent);
         $fallbackApplied = false;
@@ -343,6 +351,32 @@ return static function (App $app): void {
                 'data' => null,
                 'errors' => ['public_key, trigger_event e answers (objeto) sao obrigatorios.'],
             ], 422);
+        }
+
+        if (!preg_match('/^nps_pk_[a-zA-Z0-9_]+$/', $publicKey)) {
+            return $json($response, [
+                'success' => false,
+                'data' => null,
+                'errors' => ['Chave de projeto invalida.'],
+            ], 422);
+        }
+
+        $ip = (string) ($request->getServerParams()['REMOTE_ADDR'] ?? '');
+        $ipHash = $ip !== '' ? hash('sha256', $ip) : null;
+
+        if ($ipHash !== null) {
+            $rateLimitStmt = Database::connection()->prepare(
+                'SELECT COUNT(1) FROM submissions WHERE ip_hash = :ip_hash AND created_at >= datetime(\'now\', \'-1 minute\')'
+            );
+            $rateLimitStmt->execute(['ip_hash' => $ipHash]);
+
+            if ((int) $rateLimitStmt->fetchColumn() >= 10) {
+                return $json($response, [
+                    'success' => false,
+                    'data' => null,
+                    'errors' => ['Muitas requisicoes. Tente novamente em breve.'],
+                ], 429);
+            }
         }
 
         $surveyRepository = new SurveyRepository();
@@ -453,8 +487,6 @@ return static function (App $app): void {
         }
 
         $pdo = Database::connection();
-        $ip = (string) ($request->getServerParams()['REMOTE_ADDR'] ?? '');
-        $ipHash = $ip !== '' ? hash('sha256', $ip) : null;
         $userAgent = trim($request->getHeaderLine('User-Agent'));
 
         $pdo->beginTransaction();

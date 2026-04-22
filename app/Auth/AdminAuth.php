@@ -11,9 +11,13 @@ final class AdminAuth
     public static function attempt(string $username, string $password): bool
     {
         $expectedUser = (string) ($_ENV['ADMIN_USER'] ?? 'admin');
-        $expectedPass = (string) ($_ENV['ADMIN_PASS'] ?? 'admin123');
+        $expectedHash = (string) ($_ENV['ADMIN_PASS'] ?? '');
 
-        return hash_equals($expectedUser, $username) && hash_equals($expectedPass, $password);
+        if (!hash_equals($expectedUser, $username)) {
+            return false;
+        }
+
+        return password_verify($password, $expectedHash);
     }
 
     public static function login(string $username): void
