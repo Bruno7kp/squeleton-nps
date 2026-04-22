@@ -8,7 +8,6 @@ use Dotenv\Dotenv;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
-use Throwable;
 
 return static function (App $app): void {
     $projectRoot = dirname(__DIR__);
