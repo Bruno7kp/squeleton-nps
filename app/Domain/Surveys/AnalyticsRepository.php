@@ -34,6 +34,27 @@ final class AnalyticsRepository
         return array_values(array_filter(array_map(static fn ($item): string => (string) $item, $rows)));
     }
 
+    public function homeStats(): array
+    {
+        $pdo = $this->connection();
+
+        try {
+            $projects = (int) $pdo->query('SELECT COUNT(1) FROM projects')->fetchColumn();
+            $surveys = (int) $pdo->query('SELECT COUNT(1) FROM surveys')->fetchColumn();
+            $submissions = (int) $pdo->query('SELECT COUNT(1) FROM submissions')->fetchColumn();
+            $avgRaw = $pdo->query('SELECT AVG(score_nps) FROM submissions WHERE score_nps IS NOT NULL')->fetchColumn();
+
+            return [
+                'projects' => $projects,
+                'surveys' => $surveys,
+                'submissions' => $submissions,
+                'avg_nps' => $avgRaw !== null ? round((float) $avgRaw, 2) : 0,
+            ];
+        } catch (\Throwable) {
+            return ['projects' => 0, 'surveys' => 0, 'submissions' => 0, 'avg_nps' => 0];
+        }
+    }
+
     public function metrics(array $filters): array
     {
         $params = [];
@@ -42,7 +63,10 @@ final class AnalyticsRepository
         $sql = 'SELECT
                     COUNT(1) AS total_submissions,
                     COALESCE(SUM(CASE WHEN sub.is_completed = 1 THEN 1 ELSE 0 END), 0) AS completed_submissions,
-                    AVG(sub.score_nps) AS avg_nps
+                    AVG(sub.score_nps) AS avg_nps,
+                    COALESCE(SUM(CASE WHEN sub.score_nps >= 9 THEN 1 ELSE 0 END), 0) AS promoters,
+                    COALESCE(SUM(CASE WHEN sub.score_nps <= 6 THEN 1 ELSE 0 END), 0) AS detractors,
+                    COUNT(sub.score_nps) AS scored_submissions
                 FROM submissions sub
                 ' . $whereSql;
 
@@ -55,11 +79,22 @@ final class AnalyticsRepository
         $avgNps = $row['avg_nps'] !== null ? round((float) $row['avg_nps'], 2) : null;
         $completionRate = $total > 0 ? round(($completed / $total) * 100, 2) : 0.0;
 
+        $scored = (int) ($row['scored_submissions'] ?? 0);
+        $promoters = (int) ($row['promoters'] ?? 0);
+        $detractors = (int) ($row['detractors'] ?? 0);
+        $npsScore = $scored > 0
+            ? round((($promoters / $scored) - ($detractors / $scored)) * 100, 1)
+            : null;
+
         return [
             'total_submissions' => $total,
             'completed_submissions' => $completed,
             'avg_nps' => $avgNps,
             'completion_rate' => $completionRate,
+            'nps_score' => $npsScore,
+            'promoters' => $promoters,
+            'detractors' => $detractors,
+            'neutrals' => $scored - $promoters - $detractors,
         ];
     }
 

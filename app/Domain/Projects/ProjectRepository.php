@@ -9,6 +9,16 @@ use PDO;
 
 final class ProjectRepository
 {
+    public static function generatePublicKey(): string
+    {
+        return 'nps_pk_' . bin2hex(random_bytes(8));
+    }
+
+    public static function isValidSlug(string $slug): bool
+    {
+        return (bool) preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug);
+    }
+
     public function listAll(): array
     {
         $stmt = $this->connection()->query(

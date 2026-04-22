@@ -9,6 +9,11 @@ use PDO;
 
 final class SurveyRepository
 {
+    public static function isValidSlug(string $slug): bool
+    {
+        return (bool) preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug);
+    }
+
     public function listWithProject(): array
     {
         $stmt = $this->connection()->query(

@@ -8,7 +8,6 @@ use App\Domain\Questions\QuestionRepository;
 use App\Domain\Questions\SurveyRuleRepository;
 use App\Domain\Surveys\AnalyticsRepository;
 use App\Domain\Surveys\SurveyRepository;
-use App\Infrastructure\Database;
 use App\Middleware\AdminAuthMiddleware;
 use App\Support\Flash;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -34,29 +33,7 @@ return static function (App $app): void {
     };
 
     $app->get('/', static function (Request $request, Response $response): Response {
-        $homeStats = [
-            'projects' => 0,
-            'surveys' => 0,
-            'submissions' => 0,
-            'avg_nps' => 0,
-        ];
-
-        try {
-            $pdo = Database::connection();
-            $homeStats['projects'] = (int) $pdo->query('SELECT COUNT(1) FROM projects')->fetchColumn();
-            $homeStats['surveys'] = (int) $pdo->query('SELECT COUNT(1) FROM surveys')->fetchColumn();
-            $homeStats['submissions'] = (int) $pdo->query('SELECT COUNT(1) FROM submissions')->fetchColumn();
-
-            $avgNpsRaw = $pdo->query('SELECT AVG(score_nps) FROM submissions WHERE score_nps IS NOT NULL')->fetchColumn();
-            $homeStats['avg_nps'] = $avgNpsRaw !== null ? round((float) $avgNpsRaw, 2) : 0;
-        } catch (\Throwable $exception) {
-            $homeStats = [
-                'projects' => 0,
-                'surveys' => 0,
-                'submissions' => 0,
-                'avg_nps' => 0,
-            ];
-        }
+        $homeStats = (new AnalyticsRepository())->homeStats();
 
         ob_start();
         require dirname(__DIR__, 2) . '/templates/home.php';
@@ -221,7 +198,7 @@ return static function (App $app): void {
                 return $response->withStatus(422);
             }
 
-            if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            if (!ProjectRepository::isValidSlug($slug)) {
                 $content = $renderTemplate('admin/partials/projects.php', [
                     'projects' => $repository->listAll(),
                     'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
@@ -243,12 +220,10 @@ return static function (App $app): void {
                 return $response->withStatus(409);
             }
 
-            $publicKey = 'nps_pk_' . bin2hex(random_bytes(8));
-
             $repository->create([
                 'name' => $name,
                 'slug' => $slug,
-                'public_key' => $publicKey,
+                'public_key' => ProjectRepository::generatePublicKey(),
                 'description' => ($description === '') ? null : $description,
                 'is_active' => $isActive,
             ]);
@@ -292,7 +267,7 @@ return static function (App $app): void {
                 return $response->withStatus(422);
             }
 
-            if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            if (!ProjectRepository::isValidSlug($slug)) {
                 $content = $renderTemplate('admin/partials/projects.php', [
                     'projects' => $repository->listAll(),
                     'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
@@ -417,7 +392,7 @@ return static function (App $app): void {
                 return $response->withStatus(422);
             }
 
-            if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            if (!SurveyRepository::isValidSlug($slug)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
                     'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
@@ -510,7 +485,7 @@ return static function (App $app): void {
                 return $response->withStatus(422);
             }
 
-            if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            if (!SurveyRepository::isValidSlug($slug)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
                     'errorMessage' => 'Slug inválido. Use apenas letras minusculas, numeros e hifen.',
