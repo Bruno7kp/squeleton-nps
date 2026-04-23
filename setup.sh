@@ -28,4 +28,4 @@ php scripts/seed.php
 printf "\n[6/6] Subindo Docker...\n"
 docker compose up -d --build
 
-echo "\nSetup concluido. Acesse: http://localhost:8080"
+echo "\nSetup concluido. Acesse: http://localhost:8081"

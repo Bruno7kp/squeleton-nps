@@ -55,6 +55,7 @@
             .then(function (response) { return response.json(); })
             .then(function (result) {
                 if (!result.success || !result.data) {
+                    state.survey = null;
                     throw new Error('Survey schema unavailable');
                 }
 
@@ -567,6 +568,24 @@
             liveDialogElement.style.display = 'block';
         }
 
+        function openForTrigger(nextTrigger) {
+            var trigger = String(nextTrigger || activeTriggerEvent || '').trim();
+
+            if (!trigger) {
+                return;
+            }
+
+            loadSurvey(trigger)
+                .then(function () {
+                    openDialog();
+                })
+                .catch(function () {
+                    state.loading = false;
+                    state.submitError = '';
+                    render();
+                });
+        }
+
         function closeDialog() {
             var liveDialogElement = document.getElementById(dialogId) || dialogElement;
             if (!liveDialogElement) {
@@ -585,7 +604,14 @@
             liveDialogElement.style.display = 'none';
         }
 
-        openButton.addEventListener('click', openDialog);
+        openButton.addEventListener('click', function () {
+            if (state.survey) {
+                openDialog();
+                return;
+            }
+
+            openForTrigger(activeTriggerEvent);
+        });
         dialogElement.addEventListener('click', function (event) {
             var target = event.target;
             if (target && target.hasAttribute('data-a11y-dialog-hide')) {
@@ -599,18 +625,13 @@
         window.NPSWidget.openWithTrigger = function (nextTrigger) {
             var trigger = String(nextTrigger || '').trim();
             if (!trigger) {
-                openDialog();
+                if (state.survey) {
+                    openDialog();
+                }
                 return;
             }
 
-            openDialog();
-            loadSurvey(trigger)
-                .then(function () {})
-                .catch(function () {
-                    state.loading = false;
-                    state.submitError = 'Não foi possível carregar a pesquisa para este gatilho.';
-                    render();
-                });
+            openForTrigger(trigger);
         };
 
         if (shouldAutoOpen) {

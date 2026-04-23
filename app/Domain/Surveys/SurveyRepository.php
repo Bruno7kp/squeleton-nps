@@ -17,36 +17,65 @@ final class SurveyRepository
     public function listWithProject(): array
     {
         $stmt = $this->connection()->query(
-            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.trigger_event, s.title, s.description,
-                    s.created_at, s.updated_at, p.name AS project_name
+            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.title, s.description,
+                    s.created_at, s.updated_at, p.name AS project_name,
+                    GROUP_CONCAT(st.trigger_key, ", ") AS trigger_keys
              FROM surveys s
              INNER JOIN projects p ON p.id = s.project_id
+             LEFT JOIN survey_triggers st ON st.survey_id = s.id
+             GROUP BY s.id
              ORDER BY s.id DESC'
         );
 
-        return $stmt->fetchAll() ?: [];
+        $surveys = $stmt->fetchAll() ?: [];
+
+        foreach ($surveys as &$survey) {
+            $survey['trigger_keys'] = (string) ($survey['trigger_keys'] ?? '');
+            $survey['trigger_event'] = $survey['trigger_keys'];
+        }
+
+        return $surveys;
     }
 
     public function findById(int $id): ?array
     {
         $stmt = $this->connection()->prepare(
-            'SELECT id, project_id, name, slug, status, trigger_event, title, description
-             FROM surveys
-             WHERE id = :id
+            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.title, s.description,
+                    GROUP_CONCAT(st.trigger_key, ",") AS trigger_keys_csv
+             FROM surveys s
+             LEFT JOIN survey_triggers st ON st.survey_id = s.id
+             WHERE s.id = :id
+             GROUP BY s.id
              LIMIT 1'
         );
         $stmt->execute(['id' => $id]);
 
         $survey = $stmt->fetch();
 
-        return is_array($survey) ? $survey : null;
+        if (!is_array($survey)) {
+            return null;
+        }
+
+        $triggerKeys = [];
+        if (!empty($survey['trigger_keys_csv'])) {
+            $triggerKeys = array_values(array_filter(array_map(
+                static fn (string $trigger): string => trim($trigger),
+                explode(',', (string) $survey['trigger_keys_csv'])
+            ), static fn (string $trigger): bool => $trigger !== ''));
+        }
+
+        unset($survey['trigger_keys_csv']);
+        $survey['trigger_keys'] = $triggerKeys;
+        $survey['trigger_event'] = $triggerKeys[0] ?? '';
+
+        return $survey;
     }
 
     public function create(array $data): int
     {
         $stmt = $this->connection()->prepare(
             'INSERT INTO surveys (project_id, name, slug, status, trigger_event, title, description)
-             VALUES (:project_id, :name, :slug, :status, :trigger_event, :title, :description)'
+             VALUES (:project_id, :name, :slug, :status, :legacy_trigger_event, :title, :description)'
         );
 
         $stmt->execute([
@@ -54,7 +83,7 @@ final class SurveyRepository
             'name' => $data['name'],
             'slug' => $data['slug'],
             'status' => $data['status'],
-            'trigger_event' => $data['trigger_event'],
+            'legacy_trigger_event' => $data['legacy_trigger_event'] ?? '',
             'title' => $data['title'],
             'description' => $data['description'],
         ]);
@@ -70,7 +99,7 @@ final class SurveyRepository
                  name = :name,
                  slug = :slug,
                  status = :status,
-                 trigger_event = :trigger_event,
+                 trigger_event = :legacy_trigger_event,
                  title = :title,
                  description = :description,
                  updated_at = CURRENT_TIMESTAMP
@@ -83,7 +112,7 @@ final class SurveyRepository
             'name' => $data['name'],
             'slug' => $data['slug'],
             'status' => $data['status'],
-            'trigger_event' => $data['trigger_event'],
+            'legacy_trigger_event' => $data['legacy_trigger_event'] ?? '',
             'title' => $data['title'],
             'description' => $data['description'],
         ]);
@@ -111,12 +140,13 @@ final class SurveyRepository
     public function findPublishedByProjectKeyAndTrigger(string $publicKey, string $triggerEvent): ?array
     {
         $stmt = $this->connection()->prepare(
-            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.trigger_event, s.title, s.description,
+            'SELECT s.id, s.project_id, s.name, s.slug, s.status, st.trigger_key AS trigger_event, s.title, s.description,
                     p.public_key
              FROM surveys s
+             INNER JOIN survey_triggers st ON st.survey_id = s.id
              INNER JOIN projects p ON p.id = s.project_id
              WHERE p.public_key = :public_key
-               AND s.trigger_event = :trigger_event
+               AND st.trigger_key = :trigger_event
                AND s.status = :status
              ORDER BY s.updated_at DESC
              LIMIT 1'
@@ -136,7 +166,15 @@ final class SurveyRepository
     public function findLatestPublishedByProjectKey(string $publicKey): ?array
     {
         $stmt = $this->connection()->prepare(
-            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.trigger_event, s.title, s.description,
+            'SELECT s.id, s.project_id, s.name, s.slug, s.status,
+                    (
+                        SELECT st.trigger_key
+                        FROM survey_triggers st
+                        WHERE st.survey_id = s.id
+                        ORDER BY st.id ASC
+                        LIMIT 1
+                    ) AS trigger_event,
+                    s.title, s.description,
                     p.public_key
              FROM surveys s
              INNER JOIN projects p ON p.id = s.project_id

@@ -17,7 +17,7 @@
                 <h2 class="fs-10 fw-700 m-0-b">Perguntas e Regras</h2>
                 <p class="m-10-t m-0-b">
                     Pesquisa: <strong><?= htmlspecialchars((string) ($survey['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?></strong>
-                    (<?= htmlspecialchars((string) ($survey['trigger_event'] ?? ''), ENT_QUOTES, 'UTF-8') ?>)
+                    (<?= htmlspecialchars((string) (($survey['trigger_keys'] ?? []) !== [] ? implode(', ', array_map(static fn (mixed $item): string => (string) $item, (array) ($survey['trigger_keys'] ?? []))) : '-'), ENT_QUOTES, 'UTF-8') ?>)
                 </p>
             </div>
             <div class="f-row f-gap-10 xs-m-15-t">

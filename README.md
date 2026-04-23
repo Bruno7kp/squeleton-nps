@@ -9,7 +9,7 @@ Este repositorio implementa um sistema de pesquisa no estilo Survey, com foco em
 Escopo macro:
 - Home showcase para demonstrar bibliotecas integradas.
 - Painel admin para gestao de projetos, pesquisas e respostas.
-- Widget JS embutivel para captura de respostas por gatilho.
+- Widget JS embutivel para captura de respostas por gatilhos dinamicos.
 
 ## Stack
 
@@ -150,28 +150,29 @@ O widget é carregado a partir de `public/widget-loader.js` e foi projetado para
 - O script localiza o elemento `<script data-nps-key>` atual.
 - Garante as dependências necessárias (`Squeleton`, `VanJS`, `A11yDialog`) via CDN quando necessário.
 - Faz `GET /api/widget/survey?public_key=...&trigger_event=...` para buscar a pesquisa.
-- Se houver pesquisa publicada para o gatilho, ela é exibida no modal.
-- Se não houver pesquisa para o gatilho solicitado, o backend tenta fallback para a última pesquisa publicada do mesmo projeto.
+- Se houver pesquisa publicada mapeada para o gatilho, ela é exibida no modal.
+- Se não houver mapeamento para o gatilho informado, a API responde `404`, registra o evento em log e o modal nao abre.
 - O envio usa `POST /api/widget/submissions` com payload JSON:
   - `public_key`, `trigger_event`, `answers`
   - `source_url`, `user_identifier`, `session_identifier`
 - O backend libera CORS para as rotas do widget (`/api/widget/*`), então o embed pode ser usado em domínios externos.
 
-### Fallback e erros
+### Gatilhos e erros
 
-- Fallback de pesquisa:
-  - Se não existir pesquisa publicada para o gatilho atual, a API retorna a última pesquisa publicada do projeto.
-  - Se não existir nenhuma pesquisa publicada, o widget exibe erro.
+- Gatilho nao mapeado:
+  - A API retorna `404` com erro amigavel e registra em `trigger_event_logs`.
+  - O widget aborta silenciosamente (nao abre modal para gatilho desconhecido).
 - Erros de submissão:
   - Falha no `fetch` mostra mensagem de comunicação.
-  - Resposta de erro da API mostra mensagem genérica e validações internas.
+  - Resposta de erro da API mostra mensagem generica e validacoes internas.
 - O widget não depende de CSRF para a API, pois apenas `/api/*` é ignorado pelo middleware CSRF.
 
 ### Gatilhos suportados
 
-- `on_load`
-- `after_completed_video`
-- `before_cancel`
+- Nao existe mais lista fixa de gatilhos no backend/admin.
+- Qualquer `trigger_event` textual pode ser enviado pelo host externo.
+- O gatilho so exibe pesquisa quando houver mapeamento em `survey_triggers` para o projeto.
+- Regra de unicidade: um mesmo gatilho nao pode apontar para mais de uma pesquisa dentro do mesmo projeto.
 
 ## Deploy e operacao
 
@@ -187,10 +188,11 @@ Checklist basico para ambiente de producao:
 Fluxo recomendado antes de release:
 1. Login admin com credenciais validas e invalidas.
 2. Criar/editar projeto, pesquisa, pergunta e regra condicional.
-3. Abrir home, disparar gatilhos manuais e gatilho por fim de video.
-4. Enviar resposta pelo widget e confirmar persistencia no dashboard.
-5. Validar filtros do dashboard (projeto, gatilho e periodo).
-6. Testar logout e tentativa de acesso a `/admin` sem autenticacao.
+3. No cadastro/edicao de pesquisa, validar multiplos gatilhos (um por linha) e validacao de conflito por projeto.
+4. Abrir home, disparar gatilhos manuais e gatilho por fim de video.
+5. Enviar resposta pelo widget e confirmar persistencia no dashboard.
+6. Validar filtros do dashboard (projeto, gatilho e periodo).
+7. Testar logout e tentativa de acesso a `/admin` sem autenticacao.
 
 ## Referencias
 
@@ -208,4 +210,5 @@ Fluxo recomendado antes de release:
 
 - Widget embed funcional com API de widget e CORS aberto para domínios externos.
 - Hardening de segurança aplicado no entrypoint, middleware e headers globais.
-- Fallback de pesquisa disponível quando o gatilho solicitado não encontra uma pesquisa publicada.
+- Mapeamento dinamico de gatilhos por pesquisa via `survey_triggers`.
+- Log de gatilhos recebidos (mapeados e nao mapeados) em `trigger_event_logs`.

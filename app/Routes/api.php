@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Domain\Surveys\SubmissionHandler;
 use App\Domain\Surveys\SurveyRepository;
+use App\Domain\Surveys\TriggerEventLogRepository;
 use App\Infrastructure\Database;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -80,6 +81,8 @@ return static function (App $app): void {
         $params = $request->getQueryParams();
         $publicKey = trim((string) ($params['public_key'] ?? ''));
         $triggerEvent = trim((string) ($params['trigger_event'] ?? ''));
+        $sourceUrl = trim((string) ($params['source_url'] ?? $request->getHeaderLine('Referer')));
+        $userIdentifier = trim((string) ($params['user_identifier'] ?? ''));
 
         if ($publicKey === '' || $triggerEvent === '') {
             return $json($response, [
@@ -98,21 +101,27 @@ return static function (App $app): void {
         }
 
         $repository = new SurveyRepository();
+        $triggerLogRepository = new TriggerEventLogRepository();
         $survey = $repository->findPublishedByProjectKeyAndTrigger($publicKey, $triggerEvent);
-        $fallbackApplied = false;
 
         if ($survey === null) {
-            $survey = $repository->findLatestPublishedByProjectKey($publicKey);
-            $fallbackApplied = $survey !== null;
+            $triggerLogRepository->log($publicKey, $triggerEvent, $sourceUrl, $userIdentifier, null);
 
-            if ($survey === null) {
-                return $json($response, [
-                    'success' => false,
-                    'data' => null,
-                    'errors' => ['Pesquisa publicada nao encontrada para esta chave e gatilho.'],
-                ], 404);
-            }
+            return $json($response, [
+                'success' => false,
+                'data' => null,
+                'errors' => ['Nenhuma pesquisa publicada foi associada ao gatilho informado.'],
+            ], 404);
         }
+
+        $triggerLogRepository->log(
+            $publicKey,
+            $triggerEvent,
+            $sourceUrl,
+            $userIdentifier,
+            (int) $survey['id'],
+            (int) $survey['project_id']
+        );
 
         $schema = (new SubmissionHandler())->loadSchema((int) $survey['id']);
 
@@ -126,13 +135,13 @@ return static function (App $app): void {
                 'status' => (string) $survey['status'],
                 'trigger_event' => (string) $survey['trigger_event'],
                 'requested_trigger_event' => $triggerEvent,
-                'fallback_applied' => $fallbackApplied,
+                'fallback_applied' => false,
                 'title' => $survey['title'],
                 'description' => $survey['description'],
                 'questions' => $schema['questions'],
                 'rules' => $schema['rules'],
             ],
-            'errors' => $fallbackApplied ? ['Nenhuma pesquisa publicada para o gatilho solicitado; exibindo fallback.'] : [],
+            'errors' => [],
         ]);
     });
 
@@ -179,6 +188,14 @@ return static function (App $app): void {
 
         $survey = (new SurveyRepository())->findPublishedByProjectKeyAndTrigger($publicKey, $triggerEvent);
         if ($survey === null) {
+            (new TriggerEventLogRepository())->log(
+                $publicKey,
+                $triggerEvent,
+                trim((string) ($payload['source_url'] ?? '')),
+                trim((string) ($payload['user_identifier'] ?? '')),
+                null
+            );
+
             return $json($response, [
                 'success' => false,
                 'data' => null,

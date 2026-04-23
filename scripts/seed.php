@@ -34,6 +34,8 @@ $pdo->beginTransaction();
 try {
   $pdo->exec('DELETE FROM submission_answers');
   $pdo->exec('DELETE FROM submissions');
+  $pdo->exec('DELETE FROM trigger_event_logs');
+  $pdo->exec('DELETE FROM survey_triggers');
   $pdo->exec('DELETE FROM survey_rules');
   $pdo->exec('DELETE FROM questions');
   $pdo->exec('DELETE FROM surveys');
@@ -56,42 +58,68 @@ try {
   $projectId = (int) $pdo->lastInsertId();
 
   $surveyStmt = $pdo->prepare('INSERT INTO surveys (project_id, name, slug, status, trigger_event, title, description, settings_json) VALUES (:project_id, :name, :slug, :status, :trigger_event, :title, :description, :settings_json)');
+  $surveyTriggerStmt = $pdo->prepare('INSERT INTO survey_triggers (project_id, survey_id, trigger_key) VALUES (:project_id, :survey_id, :trigger_key)');
 
   $surveyStmt->execute([
     'project_id' => $projectId,
     'name' => 'NPS Pos-Video',
     'slug' => 'nps-pos-video',
     'status' => 'published',
-    'trigger_event' => 'after_completed_video',
+    'trigger_event' => '',
     'title' => 'Como voce avalia sua experiencia?',
     'description' => 'Pesquisa principal exibida apos concluir o video.',
     'settings_json' => json_encode(['theme' => 'blue', 'show_logo' => true], JSON_UNESCAPED_UNICODE),
   ]);
   $surveyVideoId = (int) $pdo->lastInsertId();
+  $surveyTriggerStmt->execute([
+    'project_id' => $projectId,
+    'survey_id' => $surveyVideoId,
+    'trigger_key' => 'after_completed_video',
+  ]);
+  $surveyTriggerStmt->execute([
+    'project_id' => $projectId,
+    'survey_id' => $surveyVideoId,
+    'trigger_key' => 'completed_course',
+  ]);
 
   $surveyStmt->execute([
     'project_id' => $projectId,
     'name' => 'NPS Onboarding',
     'slug' => 'nps-onboarding',
     'status' => 'published',
-    'trigger_event' => 'on_load',
+    'trigger_event' => '',
     'title' => 'Primeira impressao da plataforma',
     'description' => 'Pesquisa curta exibida no inicio da sessao.',
     'settings_json' => json_encode(['theme' => 'blue', 'show_logo' => false], JSON_UNESCAPED_UNICODE),
   ]);
   $surveyOnLoadId = (int) $pdo->lastInsertId();
+  $surveyTriggerStmt->execute([
+    'project_id' => $projectId,
+    'survey_id' => $surveyOnLoadId,
+    'trigger_key' => 'on_load',
+  ]);
+  $surveyTriggerStmt->execute([
+    'project_id' => $projectId,
+    'survey_id' => $surveyOnLoadId,
+    'trigger_key' => 'joined_course',
+  ]);
 
   $surveyStmt->execute([
     'project_id' => $projectId,
     'name' => 'NPS Retencao',
     'slug' => 'nps-before-cancel',
     'status' => 'published',
-    'trigger_event' => 'before_cancel',
+    'trigger_event' => '',
     'title' => 'O que podemos fazer para voce continuar?',
     'description' => 'Pesquisa exibida antes de cancelamento para capturar risco de churn.',
     'settings_json' => json_encode(['theme' => 'blue', 'show_logo' => true], JSON_UNESCAPED_UNICODE),
   ]);
   $surveyBeforeCancelId = (int) $pdo->lastInsertId();
+  $surveyTriggerStmt->execute([
+    'project_id' => $projectId,
+    'survey_id' => $surveyBeforeCancelId,
+    'trigger_key' => 'before_cancel',
+  ]);
 
   $questionStmt = $pdo->prepare('INSERT INTO questions (survey_id, label, field_name, question_type, position, is_required, placeholder, help_text, options_json, scale_min, scale_max) VALUES (:survey_id, :label, :field_name, :question_type, :position, :is_required, :placeholder, :help_text, :options_json, :scale_min, :scale_max)');
 

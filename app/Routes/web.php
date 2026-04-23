@@ -8,6 +8,7 @@ use App\Domain\Questions\QuestionRepository;
 use App\Domain\Questions\SurveyRuleRepository;
 use App\Domain\Surveys\AnalyticsRepository;
 use App\Domain\Surveys\SurveyRepository;
+use App\Domain\Surveys\SurveyTriggerRepository;
 use App\Middleware\AdminAuthMiddleware;
 use App\Support\Flash;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,9 +18,24 @@ use Slim\Routing\RouteCollectorProxy;
 
 return static function (App $app): void {
     $statusOptions = ['draft', 'published'];
-    $triggerOptions = ['on_load', 'after_completed_video', 'before_cancel'];
     $questionTypeOptions = ['score_0_10', 'stars_0_5', 'text', 'select', 'checkbox', 'radio'];
     $ruleOperatorOptions = ['lt', 'lte', 'gt', 'gte', 'eq', 'neq', 'contains'];
+
+    $parseTriggerKeys = static function (string $rawInput): array {
+        $normalized = str_replace(["\r\n", "\r", ','], "\n", $rawInput);
+        $items = preg_split('/\n+/u', $normalized) ?: [];
+
+        $keys = [];
+        foreach ($items as $item) {
+            $trigger = trim($item);
+            if ($trigger === '') {
+                continue;
+            }
+            $keys[$trigger] = true;
+        }
+
+        return array_keys($keys);
+    };
 
     $renderTemplate = static function (string $templatePath, array $data = []): string {
         extract($data, EXTR_SKIP);
@@ -95,7 +111,7 @@ return static function (App $app): void {
         return $redirect($response, '/login');
     });
 
-    $app->group('/admin', static function (RouteCollectorProxy $group) use ($renderTemplate, $statusOptions, $triggerOptions, $questionTypeOptions, $ruleOperatorOptions): void {
+    $app->group('/admin', static function (RouteCollectorProxy $group) use ($renderTemplate, $statusOptions, $questionTypeOptions, $ruleOperatorOptions, $parseTriggerKeys): void {
         $group->get('', static function (Request $request, Response $response) use ($renderTemplate): Response {
             $content = $renderTemplate('admin/layout.php', [
                 'user' => AdminAuth::user(),
@@ -321,7 +337,7 @@ return static function (App $app): void {
             return $response;
         });
 
-        $group->get('/surveys/form', static function (Request $request, Response $response) use ($renderTemplate, $statusOptions, $triggerOptions): Response {
+        $group->get('/surveys/form', static function (Request $request, Response $response) use ($renderTemplate, $statusOptions): Response {
             $projectRepository = new ProjectRepository();
 
             $content = $renderTemplate('admin/partials/survey_form.php', [
@@ -331,13 +347,12 @@ return static function (App $app): void {
                     'name' => '',
                     'slug' => '',
                     'status' => 'draft',
-                    'trigger_event' => 'on_load',
+                    'trigger_keys' => ['on_load'],
                     'title' => '',
                     'description' => '',
                 ],
                 'projects' => $projectRepository->listAll(),
                 'statusOptions' => $statusOptions,
-                'triggerOptions' => $triggerOptions,
                 'errorMessage' => null,
             ]);
 
@@ -345,7 +360,7 @@ return static function (App $app): void {
             return $response;
         });
 
-        $group->get('/surveys/form/{id}', static function (Request $request, Response $response, array $args) use ($renderTemplate, $statusOptions, $triggerOptions): Response {
+        $group->get('/surveys/form/{id}', static function (Request $request, Response $response, array $args) use ($renderTemplate, $statusOptions): Response {
             $projectRepository = new ProjectRepository();
             $surveyRepository = new SurveyRepository();
             $survey = $surveyRepository->findById((int) ($args['id'] ?? 0));
@@ -359,7 +374,6 @@ return static function (App $app): void {
                 'survey' => $survey,
                 'projects' => $projectRepository->listAll(),
                 'statusOptions' => $statusOptions,
-                'triggerOptions' => $triggerOptions,
                 'errorMessage' => null,
             ]);
 
@@ -367,16 +381,17 @@ return static function (App $app): void {
             return $response;
         });
 
-        $group->post('/surveys', static function (Request $request, Response $response) use ($renderTemplate, $statusOptions, $triggerOptions): Response {
+        $group->post('/surveys', static function (Request $request, Response $response) use ($renderTemplate, $statusOptions, $parseTriggerKeys): Response {
             $projectRepository = new ProjectRepository();
             $surveyRepository = new SurveyRepository();
+            $surveyTriggerRepository = new SurveyTriggerRepository();
             $input = (array) $request->getParsedBody();
 
             $projectId = (int) ($input['project_id'] ?? 0);
             $name = trim((string) ($input['name'] ?? ''));
             $slug = strtolower(trim((string) ($input['slug'] ?? '')));
             $status = trim((string) ($input['status'] ?? 'draft'));
-            $triggerEvent = trim((string) ($input['trigger_event'] ?? 'on_load'));
+            $triggerKeys = $parseTriggerKeys((string) ($input['trigger_keys'] ?? ''));
             $title = trim((string) ($input['title'] ?? ''));
             $description = trim((string) ($input['description'] ?? ''));
 
@@ -412,14 +427,25 @@ return static function (App $app): void {
                 return $response->withStatus(422);
             }
 
-            if (!in_array($triggerEvent, $triggerOptions, true)) {
+            if ($triggerKeys === []) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Gatilho inválido.',
+                    'errorMessage' => 'Informe ao menos um gatilho.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
                 return $response->withStatus(422);
+            }
+
+            $conflicts = $surveyTriggerRepository->findConflicts($projectId, $triggerKeys);
+            if (!empty($conflicts)) {
+                $content = $renderTemplate('admin/partials/surveys.php', [
+                    'surveys' => $surveyRepository->listWithProject(),
+                    'errorMessage' => 'Um ou mais gatilhos ja estao mapeados para outra pesquisa neste projeto.',
+                    'flashMessages' => Flash::pull(),
+                ]);
+                $response->getBody()->write($content);
+                return $response->withStatus(409);
             }
 
             if ($surveyRepository->slugExists($projectId, $slug)) {
@@ -432,15 +458,17 @@ return static function (App $app): void {
                 return $response->withStatus(409);
             }
 
-            $surveyRepository->create([
+            $surveyId = (int) $surveyRepository->create([
                 'project_id' => $projectId,
                 'name' => $name,
                 'slug' => $slug,
                 'status' => $status,
-                'trigger_event' => $triggerEvent,
+                'legacy_trigger_event' => $triggerKeys[0] ?? '',
                 'title' => ($title === '') ? null : $title,
                 'description' => ($description === '') ? null : $description,
             ]);
+
+            $surveyTriggerRepository->replaceBySurveyId($surveyId, $projectId, $triggerKeys);
 
             Flash::add('success', 'Pesquisa criada com sucesso.');
 
@@ -453,9 +481,10 @@ return static function (App $app): void {
             return $response;
         });
 
-        $group->post('/surveys/{id}', static function (Request $request, Response $response, array $args) use ($renderTemplate, $statusOptions, $triggerOptions): Response {
+        $group->post('/surveys/{id}', static function (Request $request, Response $response, array $args) use ($renderTemplate, $statusOptions, $parseTriggerKeys): Response {
             $projectRepository = new ProjectRepository();
             $surveyRepository = new SurveyRepository();
+            $surveyTriggerRepository = new SurveyTriggerRepository();
 
             $id = (int) ($args['id'] ?? 0);
             $existing = $surveyRepository->findById($id);
@@ -470,7 +499,7 @@ return static function (App $app): void {
             $name = trim((string) ($input['name'] ?? ''));
             $slug = strtolower(trim((string) ($input['slug'] ?? '')));
             $status = trim((string) ($input['status'] ?? 'draft'));
-            $triggerEvent = trim((string) ($input['trigger_event'] ?? 'on_load'));
+            $triggerKeys = $parseTriggerKeys((string) ($input['trigger_keys'] ?? ''));
             $title = trim((string) ($input['title'] ?? ''));
             $description = trim((string) ($input['description'] ?? ''));
 
@@ -505,14 +534,25 @@ return static function (App $app): void {
                 return $response->withStatus(422);
             }
 
-            if (!in_array($triggerEvent, $triggerOptions, true)) {
+            if ($triggerKeys === []) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Gatilho inválido.',
+                    'errorMessage' => 'Informe ao menos um gatilho.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
                 return $response->withStatus(422);
+            }
+
+            $conflicts = $surveyTriggerRepository->findConflicts($projectId, $triggerKeys, $id);
+            if (!empty($conflicts)) {
+                $content = $renderTemplate('admin/partials/surveys.php', [
+                    'surveys' => $surveyRepository->listWithProject(),
+                    'errorMessage' => 'Um ou mais gatilhos ja estao mapeados para outra pesquisa neste projeto.',
+                    'flashMessages' => Flash::pull(),
+                ]);
+                $response->getBody()->write($content);
+                return $response->withStatus(409);
             }
 
             if ($surveyRepository->slugExists($projectId, $slug, $id)) {
@@ -530,10 +570,12 @@ return static function (App $app): void {
                 'name' => $name,
                 'slug' => $slug,
                 'status' => $status,
-                'trigger_event' => $triggerEvent,
+                'legacy_trigger_event' => $triggerKeys[0] ?? '',
                 'title' => ($title === '') ? null : $title,
                 'description' => ($description === '') ? null : $description,
             ]);
+
+            $surveyTriggerRepository->replaceBySurveyId($id, $projectId, $triggerKeys);
 
             Flash::add('success', 'Pesquisa atualizada com sucesso.');
 

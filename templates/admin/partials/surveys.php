@@ -3,7 +3,7 @@
         <div class="f-row f-items-center f-justify-between xs-f-col xs-f-items-start">
             <div>
                 <h2 class="fs-10 fw-700 m-0-b">Pesquisas</h2>
-                <p class="m-10-t m-0-b">CRUD de pesquisas por projeto com gatilho e status.</p>
+                <p class="m-10-t m-0-b">CRUD de pesquisas por projeto com gatilhos dinamicos e status.</p>
             </div>
             <button
                 class="btn alert-success xs-m-15-t"
@@ -17,8 +17,9 @@
 
         <div id="survey-feedback">
             <?php if (!empty($errorMessage ?? '')): ?>
-                <div class="alert alert-danger p-15-all" role="alert">
-                    <?= htmlspecialchars((string) $errorMessage, ENT_QUOTES, 'UTF-8') ?>
+                <div class="alert alert-danger p-15-all f-row f-items-center f-justify-between f-gap-10" role="alert">
+                    <span><?= htmlspecialchars((string) $errorMessage, ENT_QUOTES, 'UTF-8') ?></span>
+                    <button type="button" class="btn alert-danger" data-close-alert="survey-feedback">Fechar</button>
                 </div>
             <?php endif; ?>
         </div>
@@ -55,7 +56,7 @@
                                     <tr>
                                         <td><?= htmlspecialchars((string) $survey['project_name'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td><?= htmlspecialchars((string) $survey['name'], ENT_QUOTES, 'UTF-8') ?></td>
-                                        <td><?= htmlspecialchars((string) $survey['trigger_event'], ENT_QUOTES, 'UTF-8') ?></td>
+                                        <td><?= htmlspecialchars((string) (($survey['trigger_keys'] ?? '') !== '' ? $survey['trigger_keys'] : '-'), ENT_QUOTES, 'UTF-8') ?></td>
                                         <td><?= htmlspecialchars((string) $survey['status'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td class="text-right">
                                             <button
@@ -88,6 +89,16 @@
 
 <script>
 (function () {
+    var closeButton = document.querySelector('[data-close-alert="survey-feedback"]');
+    if (closeButton) {
+        closeButton.addEventListener('click', function () {
+            var wrapper = document.getElementById('survey-feedback');
+            if (wrapper) {
+                wrapper.innerHTML = '';
+            }
+        });
+    }
+
     var el = document.getElementById('survey-success-messages');
     if (!el || typeof Toastify !== 'function') {
         return;
