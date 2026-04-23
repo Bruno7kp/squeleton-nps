@@ -7,8 +7,8 @@ $metrics = $metrics ?? [
 ];
 $recentSubmissions = $recentSubmissions ?? [];
 $projects = $projects ?? [];
-$triggerEvents = $triggerEvents ?? [];
-$filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' => '', 'to_date' => ''];
+$surveyOptions = $surveyOptions ?? [];
+$filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 'to_date' => ''];
 ?>
 
 <section>
@@ -52,13 +52,13 @@ $filters = $filters ?? ['project_id' => 0, 'trigger_event' => '', 'from_date' =>
                 </div>
 
                 <div class="c-xs-12 c-md-3">
-                    <label class="f-col f-gap-5" for="dashboard-trigger-event">
-                        <span>Gatilho</span>
-                        <select id="dashboard-trigger-event" class="form-control" name="trigger_event">
+                    <label class="f-col f-gap-5" for="dashboard-survey-id">
+                        <span>Pesquisa</span>
+                        <select id="dashboard-survey-id" class="form-control" name="survey_id">
                             <option value="">Todos</option>
-                            <?php foreach ($triggerEvents as $triggerEvent): ?>
-                                <option value="<?= htmlspecialchars((string) $triggerEvent, ENT_QUOTES, 'UTF-8') ?>" <?= (($filters['trigger_event'] ?? '') === $triggerEvent) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars((string) $triggerEvent, ENT_QUOTES, 'UTF-8') ?>
+                            <?php foreach ($surveyOptions as $surveyOption): ?>
+                                <option value="<?= (int) $surveyOption['id'] ?>" <?= ((int) ($filters['survey_id'] ?? 0) === (int) $surveyOption['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars((string) $surveyOption['project_name'] . ' - ' . $surveyOption['name'], ENT_QUOTES, 'UTF-8') ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

@@ -20,18 +20,16 @@ final class AnalyticsRepository
         return $stmt->fetchAll() ?: [];
     }
 
-    public function listTriggerEvents(): array
+    public function listSurveys(): array
     {
         $stmt = $this->connection()->query(
-            'SELECT DISTINCT trigger_event
-             FROM submissions
-             WHERE trigger_event IS NOT NULL
-               AND trigger_event <> ""
-             ORDER BY trigger_event ASC'
+            'SELECT s.id, s.name, s.status, p.name AS project_name
+             FROM surveys s
+             INNER JOIN projects p ON p.id = s.project_id
+             ORDER BY p.name ASC, s.name ASC'
         );
 
-        $rows = $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
-        return array_values(array_filter(array_map(static fn ($item): string => (string) $item, $rows)));
+        return $stmt->fetchAll() ?: [];
     }
 
     public function homeStats(): array
@@ -141,10 +139,10 @@ final class AnalyticsRepository
             $params['project_id'] = $projectId;
         }
 
-        $triggerEvent = trim((string) ($filters['trigger_event'] ?? ''));
-        if ($triggerEvent !== '') {
-            $where[] = 'sub.trigger_event = :trigger_event';
-            $params['trigger_event'] = $triggerEvent;
+        $surveyId = (int) ($filters['survey_id'] ?? 0);
+        if ($surveyId > 0) {
+            $where[] = 'sub.survey_id = :survey_id';
+            $params['survey_id'] = $surveyId;
         }
 
         $fromDate = $this->normalizeDate((string) ($filters['from_date'] ?? ''));

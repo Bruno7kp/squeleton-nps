@@ -128,7 +128,7 @@ return static function (App $app): void {
 
             $filters = [
                 'project_id' => (int) ($query['project_id'] ?? 0),
-                'trigger_event' => trim((string) ($query['trigger_event'] ?? '')),
+                'survey_id' => (int) ($query['survey_id'] ?? 0),
                 'from_date' => trim((string) ($query['from_date'] ?? '')),
                 'to_date' => trim((string) ($query['to_date'] ?? '')),
             ];
@@ -138,7 +138,7 @@ return static function (App $app): void {
                 'metrics' => $analyticsRepository->metrics($filters),
                 'recentSubmissions' => $analyticsRepository->recentSubmissions($filters),
                 'projects' => $analyticsRepository->listProjects(),
-                'triggerEvents' => $analyticsRepository->listTriggerEvents(),
+                'surveyOptions' => $analyticsRepository->listSurveys(),
                 'filters' => $filters,
             ]);
 
