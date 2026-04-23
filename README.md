@@ -143,6 +143,7 @@ O widget é carregado a partir de `public/widget-loader.js` e foi projetado para
 - `data-nps-trigger` (opcional): gatilho enviado ao backend. Default `on_load`.
 - `data-nps-auto-open` (opcional): `true` ou `false`; default `true`. Se `false`, o widget carrega mas não abre automaticamente.
 - `data-nps-show-float-button` (opcional): `true` ou `false`; default `true`. Se `false`, o botao flutuante nao e renderizado.
+	- Se `data-nps-auto-open="false"` e `data-nps-show-float-button="false"`, o widget entra em modo lazy e so carrega pesquisa ao chamar `window.NPSWidget.openWithTrigger('seu_trigger')`.
 - `data-nps-api-base` (opcional): URL base da API quando o script é servido de outro host. Default: origem do script.
 - `data-nps-user-id` (opcional): valor enviado como `user_identifier`.
 - `data-nps-session-id` (opcional): valor enviado como `session_identifier`.
@@ -152,49 +153,13 @@ O widget é carregado a partir de `public/widget-loader.js` e foi projetado para
 - O script localiza o elemento `<script data-nps-key>` atual.
 - Garante as dependências necessárias (`Squeleton`, `VanJS`, `A11yDialog`) via CDN quando necessário.
 - Faz `GET /api/widget/survey?public_key=...&trigger_event=...` para buscar a pesquisa.
+	- No modo lazy (`auto-open=false` + `show-float-button=false`), esse carregamento inicial e pulado.
 - Se houver pesquisa publicada mapeada para o gatilho, ela é exibida no modal.
 - Se não houver mapeamento para o gatilho informado, a API responde `404`, registra o evento em log e o modal nao abre.
 - O envio usa `POST /api/widget/submissions` com payload JSON:
   - `public_key`, `trigger_event`, `answers`
   - `source_url`, `user_identifier`, `session_identifier`
 - O backend libera CORS para as rotas do widget (`/api/widget/*`), então o embed pode ser usado em domínios externos.
-
-### Gatilhos e erros
-
-- Gatilho nao mapeado:
-  - A API retorna `404` com erro amigavel e registra em `trigger_event_logs`.
-  - O widget aborta silenciosamente (nao abre modal para gatilho desconhecido).
-- Erros de submissão:
-  - Falha no `fetch` mostra mensagem de comunicação.
-  - Resposta de erro da API mostra mensagem generica e validacoes internas.
-- O widget não depende de CSRF para a API, pois apenas `/api/*` é ignorado pelo middleware CSRF.
-
-### Gatilhos suportados
-
-- Nao existe mais lista fixa de gatilhos no backend/admin.
-- Qualquer `trigger_event` textual pode ser enviado pelo host externo.
-- O gatilho so exibe pesquisa quando houver mapeamento em `survey_triggers` para o projeto.
-- Regra de unicidade: um mesmo gatilho nao pode apontar para mais de uma pesquisa dentro do mesmo projeto.
-
-## Deploy e operacao
-
-Checklist basico para ambiente de producao:
-1. Definir `APP_ENV=production` e `APP_DEBUG=false`.
-2. Definir credenciais fortes para `ADMIN_USER` e `ADMIN_PASS`.
-3. Publicar atras de HTTPS (necessario para cookie `Secure`).
-4. Executar migracoes e seed conforme estrategia de ambiente.
-5. Monitorar logs do PHP-FPM e Nginx para falhas 4xx/5xx.
-
-## Smoke tests manuais
-
-Fluxo recomendado antes de release:
-1. Login admin com credenciais validas e invalidas.
-2. Criar/editar projeto, pesquisa, pergunta e regra condicional.
-3. No cadastro/edicao de pesquisa, validar multiplos gatilhos (um por linha) e validacao de conflito por projeto.
-4. Abrir home, disparar gatilhos manuais e gatilho por fim de video.
-5. Enviar resposta pelo widget e confirmar persistencia no dashboard.
-6. Validar filtros do dashboard (projeto, gatilho e periodo).
-7. Testar logout e tentativa de acesso a `/admin` sem autenticacao.
 
 ## Referencias
 
@@ -208,9 +173,3 @@ Fluxo recomendado antes de release:
 - Counter-Up2: https://github.com/bfintal/Counter-Up2
 - Wow2: https://github.com/graingert/wow
 
-## Status atual
-
-- Widget embed funcional com API de widget e CORS aberto para domínios externos.
-- Hardening de segurança aplicado no entrypoint, middleware e headers globais.
-- Mapeamento dinamico de gatilhos por pesquisa via `survey_triggers`.
-- Log de gatilhos recebidos (mapeados e nao mapeados) em `trigger_event_logs`.

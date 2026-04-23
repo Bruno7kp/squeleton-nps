@@ -22,6 +22,7 @@
     var apiBase = (currentScript.dataset.npsApiBase || scriptUrl.origin).replace(/\/$/, '');
     var shouldAutoOpen = (currentScript.dataset.npsAutoOpen || 'true').toLowerCase() !== 'false';
     var shouldShowFloatButton = (currentScript.dataset.npsShowFloatButton || 'true').toLowerCase() !== 'false';
+    var shouldLazyLoadInitialSurvey = !shouldAutoOpen && !shouldShowFloatButton;
     var userIdentifier = (currentScript.dataset.npsUserId || '').trim();
     var sessionIdentifier = (currentScript.dataset.npsSessionId || '').trim();
 
@@ -650,6 +651,13 @@
         ensureDependencies()
             .then(function () {
                 ensureDialog();
+
+                if (shouldLazyLoadInitialSurvey) {
+                    state.loading = false;
+                    render();
+                    return null;
+                }
+
                 return loadSurvey(activeTriggerEvent).catch(function () {
                     state.loading = false;
                     state.submitError = 'Não foi possível carregar a pesquisa inicial.';
