@@ -85,22 +85,30 @@
                                     </td>
                                     <td><?= htmlspecialchars((string) $question['question_type'], ENT_QUOTES, 'UTF-8') ?></td>
                                     <td><?= ((int) $question['is_required'] === 1) ? 'Sim' : 'Não' ?></td>
-                                    <td class="text-right" style="min-width: 260px;">
-                                        <div class="f-row f-wrap f-gap-5 f-justify-end">
-                                            <form class="m-0-b" hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
+                                    <td class="text-right" style="min-width: 190px;">
+                                        <div class="d-flex f-row f-gap-5 f-justify-end question-actions-row">
+                                            <form class="m-0-b question-action-form" hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
                                                 <?= \App\Support\Csrf::hiddenInput() ?>
                                                 <input type="hidden" name="direction" value="up">
-                                                <button class="btn alert-info" type="submit">Up</button>
+                                                <button class="btn alert-info admin-btn-icon" type="submit" title="Mover para cima" aria-label="Mover para cima">
+                                                    <span class="iccon-arrow-up-1"></span>
+                                                </button>
                                             </form>
-                                            <form class="m-0-b" hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
+                                            <form class="m-0-b question-action-form" hx-post="/admin/questions/<?= (int) $question['id'] ?>/move" hx-target="#admin-content" hx-swap="innerHTML">
                                                 <?= \App\Support\Csrf::hiddenInput() ?>
                                                 <input type="hidden" name="direction" value="down">
-                                                <button class="btn alert-info" type="submit">Down</button>
+                                                <button class="btn alert-info admin-btn-icon" type="submit" title="Mover para baixo" aria-label="Mover para baixo">
+                                                    <span class="iccon-arrow-down-1"></span>
+                                                </button>
                                             </form>
-                                            <button class="btn alert-info" hx-get="/admin/questions/form/<?= (int) $question['id'] ?>" hx-target="#question-form-panel" hx-swap="innerHTML">Editar</button>
-                                            <form class="m-0-b" hx-post="/admin/questions/<?= (int) $question['id'] ?>/delete" hx-target="#admin-content" hx-swap="innerHTML">
+                                            <button class="btn alert-info admin-btn-icon" hx-get="/admin/questions/form/<?= (int) $question['id'] ?>" hx-target="#question-form-panel" hx-swap="innerHTML" title="Editar pergunta" aria-label="Editar pergunta">
+                                                <span class="iccon-edit-1"></span>
+                                            </button>
+                                            <form class="m-0-b question-action-form" hx-post="/admin/questions/<?= (int) $question['id'] ?>/delete" hx-target="#admin-content" hx-swap="innerHTML">
                                                 <?= \App\Support\Csrf::hiddenInput() ?>
-                                                <button class="btn alert-danger" type="submit">Excluir</button>
+                                                <button class="btn alert-danger admin-btn-icon" type="submit" title="Excluir pergunta" aria-label="Excluir pergunta">
+                                                    <span class="iccon-delete-1"></span>
+                                                </button>
                                             </form>
                                         </div>
                                     </td>

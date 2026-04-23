@@ -75,6 +75,37 @@ body.admin-app .btn.alert-danger {
     box-shadow: none;
 }
 
+body.admin-app .admin-btn-icon {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+body.admin-app .admin-btn-icon .iccon-arrow-up-1,
+body.admin-app .admin-btn-icon .iccon-arrow-down-1,
+body.admin-app .admin-btn-icon .iccon-edit-1,
+body.admin-app .admin-btn-icon .iccon-delete-1 {
+    font-size: 16px;
+}
+
+body.admin-app .question-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+
+body.admin-app .question-action-form,
+body.admin-app .question-actions-row > .btn {
+    flex: 0 0 auto;
+    width: auto;
+}
+
 body.admin-app .table {
     border: 1px solid var(--admin-border);
     border-radius: 10px;
@@ -113,11 +144,15 @@ body.admin-app .form-control:focus {
     box-shadow: 0 0 0 3px rgba(15, 126, 108, 0.18);
 }
 
+body.admin-app input.form-control,
 body.admin-app select.form-control,
+body.admin-login input.form-control,
 body.admin-login select.form-control {
-    min-height: 42px;
-    padding-top: 0;
-    padding-bottom: 0;
+    height: 40px !important;
+    min-height: 40px !important;
+    line-height: 1.2;
+    padding: 0 12px !important;
+    box-sizing: border-box;
 }
 
 body.admin-app #admin-loading {
