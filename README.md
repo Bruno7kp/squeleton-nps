@@ -108,19 +108,70 @@ Depois acesse:
 
 ## Seguranca e hardening
 
-Itens aplicados na Fase 10:
+Itens aplicados no projeto:
 - Session hardening no entrypoint: `session.use_strict_mode`, cookie `HttpOnly`, `SameSite=Lax` e `Secure` quando HTTPS.
 - Middleware CSRF para requests mutaveis fora de `/api/*`.
-- Token CSRF injetado em formularios de login/logout e CRUD do admin.
+- Token CSRF injetado em formulários de login/logout e CRUD do admin.
 - Security headers globais:
 	- `Content-Security-Policy`
 	- `X-Content-Type-Options: nosniff`
 	- `X-Frame-Options: SAMEORIGIN`
 	- `Referrer-Policy: strict-origin-when-cross-origin`
-	- `Permissions-Policy` restritiva para camera/microfone/geolocalizacao.
+	- `Permissions-Policy` restritiva para câmera/microfone/geolocalização.
 - Error handler global com fallback:
 	- JSON padronizado para rotas `/api/*`
-	- pagina HTML amigavel para rotas web.
+	- página HTML amigável para rotas web.
+
+## Widget embed
+
+O widget é carregado a partir de `public/widget-loader.js` e foi projetado para rodar em páginas externas com CORS aberto no backend do widget.
+
+### Snippet básico
+
+```html
+<script src="https://seu-dominio.com/widget-loader.js"
+        data-nps-key="nps_pk_seu_projeto"
+        data-nps-trigger="on_load"
+        data-nps-auto-open="true"
+        defer></script>
+```
+
+### Opções de configuração
+
+- `data-nps-key` (obrigatório): chave pública do projeto.
+- `data-nps-trigger` (opcional): gatilho enviado ao backend. Default `on_load`.
+- `data-nps-auto-open` (opcional): `true` ou `false`; default `true`. Se `false`, o widget carrega mas não abre automaticamente.
+- `data-nps-api-base` (opcional): URL base da API quando o script é servido de outro host. Default: origem do script.
+- `data-nps-user-id` (opcional): valor enviado como `user_identifier`.
+- `data-nps-session-id` (opcional): valor enviado como `session_identifier`.
+
+### Como funciona
+
+- O script localiza o elemento `<script data-nps-key>` atual.
+- Garante as dependências necessárias (`Squeleton`, `VanJS`, `A11yDialog`) via CDN quando necessário.
+- Faz `GET /api/widget/survey?public_key=...&trigger_event=...` para buscar a pesquisa.
+- Se houver pesquisa publicada para o gatilho, ela é exibida no modal.
+- Se não houver pesquisa para o gatilho solicitado, o backend tenta fallback para a última pesquisa publicada do mesmo projeto.
+- O envio usa `POST /api/widget/submissions` com payload JSON:
+  - `public_key`, `trigger_event`, `answers`
+  - `source_url`, `user_identifier`, `session_identifier`
+- O backend libera CORS para as rotas do widget (`/api/widget/*`), então o embed pode ser usado em domínios externos.
+
+### Fallback e erros
+
+- Fallback de pesquisa:
+  - Se não existir pesquisa publicada para o gatilho atual, a API retorna a última pesquisa publicada do projeto.
+  - Se não existir nenhuma pesquisa publicada, o widget exibe erro.
+- Erros de submissão:
+  - Falha no `fetch` mostra mensagem de comunicação.
+  - Resposta de erro da API mostra mensagem genérica e validações internas.
+- O widget não depende de CSRF para a API, pois apenas `/api/*` é ignorado pelo middleware CSRF.
+
+### Gatilhos suportados
+
+- `on_load`
+- `after_completed_video`
+- `before_cancel`
 
 ## Deploy e operacao
 
@@ -155,5 +206,6 @@ Fluxo recomendado antes de release:
 
 ## Status atual
 
-- Fases 0 a 9 implementadas.
-- Fase 10 em andamento (hardening de seguranca e fallback global de erro aplicados).
+- Widget embed funcional com API de widget e CORS aberto para domínios externos.
+- Hardening de segurança aplicado no entrypoint, middleware e headers globais.
+- Fallback de pesquisa disponível quando o gatilho solicitado não encontra uma pesquisa publicada.
