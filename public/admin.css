@@ -113,6 +113,13 @@ body.admin-app .form-control:focus {
     box-shadow: 0 0 0 3px rgba(15, 126, 108, 0.18);
 }
 
+body.admin-app select.form-control,
+body.admin-login select.form-control {
+    min-height: 42px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
 body.admin-app #admin-loading {
     border: 1px solid #b9d9ea;
     border-radius: 10px;

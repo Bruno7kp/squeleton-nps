@@ -11,7 +11,7 @@
     <?php endif; ?>
 
     <form
-        class="f-col f-gap-15 m-20-t"
+        class="d-flex f-col f-gap-15 m-20-t"
         hx-post="<?= !empty($question['id']) ? '/admin/questions/' . (int) $question['id'] : '/admin/questions' ?>"
         hx-target="#admin-content"
         hx-swap="innerHTML"
@@ -19,19 +19,19 @@
         <?= \App\Support\Csrf::hiddenInput() ?>
         <input type="hidden" name="survey_id" value="<?= (int) ($survey['id'] ?? 0) ?>">
 
-        <label class="f-col f-gap-5" for="question-label">
+        <label class="d-flex f-col f-gap-5" for="question-label">
             <span class="fw-600">Label</span>
-            <input id="question-label" class="form-control" type="text" name="label" value="<?= htmlspecialchars((string) ($question['label'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
+            <input id="question-label" class="form-control w-100" type="text" name="label" value="<?= htmlspecialchars((string) ($question['label'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
         </label>
 
-        <label class="f-col f-gap-5" for="question-field-name">
+        <label class="d-flex f-col f-gap-5" for="question-field-name">
             <span class="fw-600">Campo técnico (field_name)</span>
-            <input id="question-field-name" class="form-control" type="text" name="field_name" value="<?= htmlspecialchars((string) ($question['field_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="nps_score" required>
+            <input id="question-field-name" class="form-control w-100" type="text" name="field_name" value="<?= htmlspecialchars((string) ($question['field_name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="nps_score" required>
         </label>
 
-        <label class="f-col f-gap-5" for="question-type">
+        <label class="d-flex f-col f-gap-5" for="question-type">
             <span class="fw-600">Tipo</span>
-            <select id="question-type" class="form-control" name="question_type" required>
+            <select id="question-type" class="form-control w-100" name="question_type" required>
                 <?php foreach ($questionTypeOptions as $type): ?>
                     <option value="<?= htmlspecialchars((string) $type, ENT_QUOTES, 'UTF-8') ?>" <?= (($question['question_type'] ?? '') === $type) ? 'selected' : '' ?>>
                         <?= htmlspecialchars((string) $type, ENT_QUOTES, 'UTF-8') ?>
@@ -45,21 +45,23 @@
             <span>Pergunta obrigatória</span>
         </label>
 
-        <label class="f-col f-gap-5" for="question-placeholder">
+        <label class="d-flex f-col f-gap-5" for="question-placeholder">
             <span class="fw-600">Placeholder</span>
-            <input id="question-placeholder" class="form-control" type="text" name="placeholder" value="<?= htmlspecialchars((string) ($question['placeholder'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+            <input id="question-placeholder" class="form-control w-100" type="text" name="placeholder" value="<?= htmlspecialchars((string) ($question['placeholder'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
         </label>
 
-        <label class="f-col f-gap-5" for="question-help-text">
+        <label class="d-flex f-col f-gap-5" for="question-help-text">
             <span class="fw-600">Texto de ajuda</span>
-            <textarea id="question-help-text" class="form-control" name="help_text" rows="2"><?= htmlspecialchars((string) ($question['help_text'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
+            <textarea id="question-help-text" class="form-control w-100" name="help_text" rows="2"><?= htmlspecialchars((string) ($question['help_text'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
         </label>
 
-        <label class="f-col f-gap-5" for="question-options">
+        <label class="d-flex f-col f-gap-5" for="question-options">
             <span class="fw-600">Opções (uma por linha para select/checkbox/radio)</span>
-            <textarea id="question-options" class="form-control" name="options_text" rows="4"><?= htmlspecialchars((string) implode(PHP_EOL, $question['options'] ?? []), ENT_QUOTES, 'UTF-8') ?></textarea>
+            <textarea id="question-options" class="form-control w-100" name="options_text" rows="4"><?= htmlspecialchars((string) implode(PHP_EOL, $question['options'] ?? []), ENT_QUOTES, 'UTF-8') ?></textarea>
         </label>
 
-        <button class="btn alert-info" type="submit">Salvar Pergunta</button>
+        <div class="d-flex f-justify-end">
+            <button class="btn alert-info" type="submit">Salvar Pergunta</button>
+        </div>
     </form>
 </div>
