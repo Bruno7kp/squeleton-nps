@@ -99,7 +99,7 @@
     <script src="https://cdn.jsdelivr.net/npm/embla-carousel/embla-carousel.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/counterup2@2.0.2/dist/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/wowjs@1.1.3/dist/wow.min.js"></script>
-    <script src="/widget-loader.js" data-nps-key="nps_pk_acme_demo_001" data-nps-trigger="on_load" data-nps-auto-open="false"></script>
+    <script src="/widget-loader.js" data-nps-key="nps_pk_acme_demo_001" data-nps-trigger="on_load" data-nps-auto-open="false" ></script>
     <script>
         (function () {
             var wowReady = typeof WOW !== 'undefined';

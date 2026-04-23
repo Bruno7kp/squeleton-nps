@@ -133,6 +133,7 @@ O widget é carregado a partir de `public/widget-loader.js` e foi projetado para
         data-nps-key="nps_pk_seu_projeto"
         data-nps-trigger="on_load"
         data-nps-auto-open="true"
+  data-nps-show-float-button="true"
         defer></script>
 ```
 
@@ -141,6 +142,7 @@ O widget é carregado a partir de `public/widget-loader.js` e foi projetado para
 - `data-nps-key` (obrigatório): chave pública do projeto.
 - `data-nps-trigger` (opcional): gatilho enviado ao backend. Default `on_load`.
 - `data-nps-auto-open` (opcional): `true` ou `false`; default `true`. Se `false`, o widget carrega mas não abre automaticamente.
+- `data-nps-show-float-button` (opcional): `true` ou `false`; default `true`. Se `false`, o botao flutuante nao e renderizado.
 - `data-nps-api-base` (opcional): URL base da API quando o script é servido de outro host. Default: origem do script.
 - `data-nps-user-id` (opcional): valor enviado como `user_identifier`.
 - `data-nps-session-id` (opcional): valor enviado como `session_identifier`.

@@ -21,6 +21,7 @@
     var scriptUrl = new URL(currentScript.src, window.location.href);
     var apiBase = (currentScript.dataset.npsApiBase || scriptUrl.origin).replace(/\/$/, '');
     var shouldAutoOpen = (currentScript.dataset.npsAutoOpen || 'true').toLowerCase() !== 'false';
+    var shouldShowFloatButton = (currentScript.dataset.npsShowFloatButton || 'true').toLowerCase() !== 'false';
     var userIdentifier = (currentScript.dataset.npsUserId || '').trim();
     var sessionIdentifier = (currentScript.dataset.npsSessionId || '').trim();
 
@@ -526,8 +527,12 @@
         ensureStyles();
 
         var wrapper = document.createElement('div');
+        var openButtonHtml = shouldShowFloatButton
+            ? '<button type="button" class="npsw-open-btn" id="' + widgetId + '-open">Avaliar experiência</button>'
+            : '';
+
         wrapper.innerHTML = '' +
-            '<button type="button" class="npsw-open-btn" id="' + widgetId + '-open">Avaliar experiência</button>' +
+            openButtonHtml +
             '<div id="' + dialogId + '" class="npsw-dialog" aria-hidden="true" aria-labelledby="' + dialogId + '-title" data-a11y-dialog="true">' +
                 '<div class="npsw-backdrop" data-a11y-dialog-hide></div>' +
                 '<div class="npsw-panel" role="document">' +
@@ -604,14 +609,16 @@
             liveDialogElement.style.display = 'none';
         }
 
-        openButton.addEventListener('click', function () {
-            if (state.survey) {
-                openDialog();
-                return;
-            }
+        if (openButton) {
+            openButton.addEventListener('click', function () {
+                if (state.survey) {
+                    openDialog();
+                    return;
+                }
 
-            openForTrigger(activeTriggerEvent);
-        });
+                openForTrigger(activeTriggerEvent);
+            });
+        }
         dialogElement.addEventListener('click', function (event) {
             var target = event.target;
             if (target && target.hasAttribute('data-a11y-dialog-hide')) {
