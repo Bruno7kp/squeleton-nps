@@ -17,62 +17,80 @@
     <?php endif; ?>
 
     <form
-        class="f-col f-gap-15 m-20-t"
+        class="d-flex f-col f-gap-15 m-20-t"
         hx-post="<?= !empty($survey['id']) ? '/admin/surveys/' . (int) $survey['id'] : '/admin/surveys' ?>"
         hx-target="#admin-content"
         hx-swap="innerHTML"
     >
         <?= \App\Support\Csrf::hiddenInput() ?>
-        <label class="f-col f-gap-5" for="survey-project-id">
-            <span class="fw-600">Projeto</span>
-            <select id="survey-project-id" class="form-control" name="project_id" required>
-                <option value="">Selecione...</option>
-                <?php foreach ($projects as $project): ?>
-                    <option value="<?= (int) $project['id'] ?>" <?= ((int) ($survey['project_id'] ?? 0) === (int) $project['id']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars((string) $project['name'], ENT_QUOTES, 'UTF-8') ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </label>
+        <div class="row gap-15">
+            <div class="c-xs-12 c-md-4">
+                <label class="d-flex f-col f-gap-5" for="survey-project-id">
+                    <span class="fw-600">Projeto</span>
+                    <select id="survey-project-id" class="form-control w-100" name="project_id" required>
+                        <option value="">Selecione...</option>
+                        <?php foreach ($projects as $project): ?>
+                            <option value="<?= (int) $project['id'] ?>" <?= ((int) ($survey['project_id'] ?? 0) === (int) $project['id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars((string) $project['name'], ENT_QUOTES, 'UTF-8') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+            </div>
 
-        <label class="f-col f-gap-5" for="survey-name">
-            <span class="fw-600">Nome interno</span>
-            <input id="survey-name" class="form-control" type="text" name="name" value="<?= htmlspecialchars((string) ($survey['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
-        </label>
+            <div class="c-xs-12 c-md-4">
+                <label class="d-flex f-col f-gap-5" for="survey-name">
+                    <span class="fw-600">Nome interno</span>
+                    <input id="survey-name" class="form-control w-100" type="text" name="name" value="<?= htmlspecialchars((string) ($survey['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
+                </label>
+            </div>
 
-        <label class="f-col f-gap-5" for="survey-slug">
-            <span class="fw-600">Slug</span>
-            <input id="survey-slug" class="form-control" type="text" name="slug" value="<?= htmlspecialchars((string) ($survey['slug'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="nps-on-load" required>
-        </label>
+            <div class="c-xs-12 c-md-4">
+                <label class="d-flex f-col f-gap-5" for="survey-slug">
+                    <span class="fw-600">Slug</span>
+                    <input id="survey-slug" class="form-control w-100" type="text" name="slug" value="<?= htmlspecialchars((string) ($survey['slug'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="nps-on-load" required>
+                </label>
+            </div>
 
-        <label class="f-col f-gap-5" for="survey-trigger-keys">
-            <span class="fw-600">Gatilhos</span>
-            <textarea id="survey-trigger-keys" class="form-control" name="trigger_keys" rows="4" placeholder="one_trigger_per_line\nanother_trigger\ncompleted_half_course" required><?= htmlspecialchars($triggerText, ENT_QUOTES, 'UTF-8') ?></textarea>
-            <small>Use um gatilho por linha. Cada gatilho pode ser usado por apenas uma pesquisa no mesmo projeto.</small>
-        </label>
+            <div class="c-xs-12 c-md-8">
+                <label class="d-flex f-col f-gap-5" for="survey-trigger-keys">
+                    <span class="fw-600">Gatilhos</span>
+                    <textarea id="survey-trigger-keys" class="form-control w-100" name="trigger_keys" rows="4" placeholder="one_trigger_per_line\nanother_trigger\ncompleted_half_course" required><?= htmlspecialchars($triggerText, ENT_QUOTES, 'UTF-8') ?></textarea>
+                    <small>Use um gatilho por linha. Cada gatilho pode ser usado por apenas uma pesquisa no mesmo projeto.</small>
+                </label>
+            </div>
 
-        <label class="f-col f-gap-5" for="survey-status">
-            <span class="fw-600">Status</span>
-            <select id="survey-status" class="form-control" name="status" required>
-                <?php foreach ($statusOptions as $status): ?>
-                    <option value="<?= htmlspecialchars((string) $status, ENT_QUOTES, 'UTF-8') ?>" <?= (($survey['status'] ?? '') === $status) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars((string) $status, ENT_QUOTES, 'UTF-8') ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </label>
+            <div class="c-xs-12 c-md-4">
+                <label class="d-flex f-col f-gap-5" for="survey-status">
+                    <span class="fw-600">Status</span>
+                    <select id="survey-status" class="form-control w-100" name="status" required>
+                        <?php foreach ($statusOptions as $status): ?>
+                            <option value="<?= htmlspecialchars((string) $status, ENT_QUOTES, 'UTF-8') ?>" <?= (($survey['status'] ?? '') === $status) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars((string) $status, ENT_QUOTES, 'UTF-8') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+            </div>
 
-        <label class="f-col f-gap-5" for="survey-title">
-            <span class="fw-600">Título exibido</span>
-            <input id="survey-title" class="form-control" type="text" name="title" value="<?= htmlspecialchars((string) ($survey['title'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
-        </label>
+            <div class="c-xs-12 c-md-6">
+                <label class="d-flex f-col f-gap-5" for="survey-title">
+                    <span class="fw-600">Título exibido</span>
+                    <input id="survey-title" class="form-control w-100" type="text" name="title" value="<?= htmlspecialchars((string) ($survey['title'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                </label>
+            </div>
 
-        <label class="f-col f-gap-5" for="survey-description">
-            <span class="fw-600">Descrição</span>
-            <textarea id="survey-description" class="form-control" name="description" rows="3"><?= htmlspecialchars((string) ($survey['description'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
-        </label>
+            <div class="c-xs-12 c-md-6">
+                <label class="d-flex f-col f-gap-5" for="survey-description">
+                    <span class="fw-600">Descrição</span>
+                    <textarea id="survey-description" class="form-control w-100" name="description" rows="3"><?= htmlspecialchars((string) ($survey['description'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
+                </label>
+            </div>
+        </div>
 
-        <button class="btn alert-info" type="submit">Salvar Pesquisa</button>
+        <div class="d-flex f-justify-end m-5-t">
+            <button class="btn alert-info" type="submit">Salvar Pesquisa</button>
+        </div>
     </form>
 </div>
 

@@ -38,9 +38,9 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
 
             <div class="row gap-10">
                 <div class="c-xs-12 c-md-3">
-                    <label class="f-col f-gap-5" for="dashboard-project-id">
+                    <label class="d-flex f-col f-gap-5" for="dashboard-project-id">
                         <span>Projeto</span>
-                        <select id="dashboard-project-id" class="form-control" name="project_id">
+                        <select id="dashboard-project-id" class="form-control w-100" name="project_id">
                             <option value="0">Todos</option>
                             <?php foreach ($projects as $project): ?>
                                 <option value="<?= (int) $project['id'] ?>" <?= ((int) ($filters['project_id'] ?? 0) === (int) $project['id']) ? 'selected' : '' ?>>
@@ -52,9 +52,9 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
                 </div>
 
                 <div class="c-xs-12 c-md-3">
-                    <label class="f-col f-gap-5" for="dashboard-survey-id">
+                    <label class="d-flex f-col f-gap-5" for="dashboard-survey-id">
                         <span>Pesquisa</span>
-                        <select id="dashboard-survey-id" class="form-control" name="survey_id">
+                        <select id="dashboard-survey-id" class="form-control w-100" name="survey_id">
                             <option value="">Todos</option>
                             <?php foreach ($surveyOptions as $surveyOption): ?>
                                 <option value="<?= (int) $surveyOption['id'] ?>" <?= ((int) ($filters['survey_id'] ?? 0) === (int) $surveyOption['id']) ? 'selected' : '' ?>>
@@ -66,16 +66,16 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
                 </div>
 
                 <div class="c-xs-12 c-md-3">
-                    <label class="f-col f-gap-5" for="dashboard-from-date">
+                    <label class="d-flex f-col f-gap-5" for="dashboard-from-date">
                         <span>Data inicial</span>
-                        <input id="dashboard-from-date" class="form-control" type="date" name="from_date" value="<?= htmlspecialchars((string) ($filters['from_date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                        <input id="dashboard-from-date" class="form-control w-100" type="date" name="from_date" value="<?= htmlspecialchars((string) ($filters['from_date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
                     </label>
                 </div>
 
                 <div class="c-xs-12 c-md-3">
-                    <label class="f-col f-gap-5" for="dashboard-to-date">
+                    <label class="d-flex f-col f-gap-5" for="dashboard-to-date">
                         <span>Data final</span>
-                        <input id="dashboard-to-date" class="form-control" type="date" name="to_date" value="<?= htmlspecialchars((string) ($filters['to_date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+                        <input id="dashboard-to-date" class="form-control w-100" type="date" name="to_date" value="<?= htmlspecialchars((string) ($filters['to_date'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
                     </label>
                 </div>
             </div>
