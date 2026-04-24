@@ -244,7 +244,7 @@ return static function (App $app): void {
                 return $response->withStatus(409);
             }
 
-            $repository->create([
+            $projectId = $repository->create([
                 'name' => $name,
                 'slug' => $slug,
                 'public_key' => ProjectRepository::generatePublicKey(),
@@ -252,12 +252,17 @@ return static function (App $app): void {
                 'is_active' => $isActive,
             ]);
 
-            Flash::add('success', 'Projeto criado com sucesso.');
+            $project = $repository->findById($projectId);
+            if ($project === null) {
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Erro ao carregar projeto criado.</div>');
+                return $response->withStatus(500);
+            }
 
-            $content = $renderTemplate('admin/partials/projects.php', [
-                'projects' => $repository->listAll(),
+            $content = $renderTemplate('admin/partials/project_form.php', [
+                'project' => $project,
+                'triggerOptions' => [],
+                'selectedTrigger' => 'none',
                 'errorMessage' => null,
-                'flashMessages' => Flash::pull(),
             ]);
 
             $response->getBody()->write($content);
