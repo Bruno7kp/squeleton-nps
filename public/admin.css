@@ -199,6 +199,13 @@ body.admin-login .btn.alert-info {
     font-weight: 700;
 }
 
+body.admin-app .modal-popup {
+    background: var(--admin-surface);
+    box-shadow: 0 24px 48px rgba(13, 41, 61, 0.18);
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
 @media (max-width: 991px) {
     body.admin-app aside.card {
         position: static;

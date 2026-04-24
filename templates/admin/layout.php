@@ -72,6 +72,58 @@
     </section>
 </main>
 
+<!-- Modal: Projeto -->
+<div data-modal="project-form-modal" class="modal-dialog" aria-hidden="true" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="dialog-content">
+        <div class="dialog-backdrop" data-modal-hide></div>
+        <div class="dialog-inline w-700px">
+            <button class="dialog-close" data-modal-hide aria-label="Fechar"></button>
+            <div class="modal-popup border-rd-10 p-30-all" id="project-modal-body">
+                <p>Carregando formulário...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Pesquisa -->
+<div data-modal="survey-form-modal" class="modal-dialog" aria-hidden="true" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="dialog-content">
+        <div class="dialog-backdrop" data-modal-hide></div>
+        <div class="dialog-inline w-700px">
+            <button class="dialog-close" data-modal-hide aria-label="Fechar"></button>
+            <div class="modal-popup border-rd-10 p-30-all" id="survey-modal-body">
+                <p>Carregando formulário...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Pergunta -->
+<div data-modal="question-form-modal" class="modal-dialog" aria-hidden="true" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="dialog-content">
+        <div class="dialog-backdrop" data-modal-hide></div>
+        <div class="dialog-inline w-600px">
+            <button class="dialog-close" data-modal-hide aria-label="Fechar"></button>
+            <div class="modal-popup border-rd-10 p-30-all" id="question-modal-body">
+                <p>Carregando formulário...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Snippet de Embed -->
+<div data-modal="snippet-modal" class="modal-dialog" aria-hidden="true" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="dialog-content">
+        <div class="dialog-backdrop" data-modal-hide></div>
+        <div class="dialog-inline w-600px">
+            <button class="dialog-close" data-modal-hide aria-label="Fechar"></button>
+            <div class="modal-popup border-rd-10 p-30-all" id="snippet-modal-body">
+                <p>Carregando snippet...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.squeleton.dev/squeleton-scripts.v4.min.js"></script>
 <script>
 (function () {
@@ -133,7 +185,7 @@
             autoOpenCheckbox.disabled = shouldDisable;
             showButtonCheckbox.disabled = shouldDisable;
             snippetElement.dataset.npsTrigger = trigger;
-            snippetElement.textContent = computeSnippet(publicKey, trigger, autoOpenCheckbox.checked, showButtonCheckbox.checked);
+            snippetElement.value = computeSnippet(publicKey, trigger, autoOpenCheckbox.checked, showButtonCheckbox.checked);
         }
 
         triggerSelect.addEventListener('change', updateSnippet);
@@ -196,6 +248,22 @@
     document.body.addEventListener('htmx:afterSwap', onHtmxSwap);
     document.body.addEventListener('htmx:afterOnLoad', onHtmxSwap);
     document.body.addEventListener('htmx:afterSettle', onHtmxSwap);
+
+    // Fechar qualquer modal aberto quando #admin-content trocar de conteúdo.
+    // MutationObserver é mais confiável que eventos HTMX para detectar o swap.
+    var adminContentEl = document.getElementById('admin-content');
+    if (adminContentEl) {
+        new MutationObserver(function () {
+            document.querySelectorAll('.modal-dialog').forEach(function (modalEl) {
+                if (modalEl.getAttribute('aria-hidden') !== 'true') {
+                    var closeBtn = modalEl.querySelector('.dialog-close');
+                    if (closeBtn) {
+                        closeBtn.click();
+                    }
+                }
+            });
+        }).observe(adminContentEl, { childList: true });
+    }
 
     var widgetSnippetObserver = new MutationObserver(function () {
         initWidgetSnippetBuilder(document.body);

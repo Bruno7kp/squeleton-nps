@@ -202,6 +202,29 @@ return static function (App $app): void {
             return $response;
         });
 
+        $group->get('/projects/snippet/{id}', static function (Request $request, Response $response, array $args) use ($renderTemplate): Response {
+            $repository = new ProjectRepository();
+            $project = $repository->findById((int) ($args['id'] ?? 0));
+
+            if ($project === null) {
+                $response->getBody()->write('<div class="alert alert-danger p-15-all">Projeto não encontrado.</div>');
+                return $response->withStatus(404);
+            }
+
+            $triggerRepository = new SurveyTriggerRepository();
+            $triggerOptions = $triggerRepository->listByProjectId((int) $project['id']);
+            $selectedTrigger = $triggerOptions[0] ?? 'none';
+
+            $content = $renderTemplate('admin/partials/project_snippet.php', [
+                'project' => $project,
+                'triggerOptions' => $triggerOptions,
+                'selectedTrigger' => $selectedTrigger,
+            ]);
+
+            $response->getBody()->write($content);
+            return $response;
+        });
+
         $group->post('/projects', static function (Request $request, Response $response) use ($renderTemplate): Response {
             $repository = new ProjectRepository();
             $input = (array) $request->getParsedBody();
@@ -252,17 +275,11 @@ return static function (App $app): void {
                 'is_active' => $isActive,
             ]);
 
-            $project = $repository->findById($projectId);
-            if ($project === null) {
-                $response->getBody()->write('<div class="alert alert-danger p-15-all">Erro ao carregar projeto criado.</div>');
-                return $response->withStatus(500);
-            }
+            Flash::add('success', 'Projeto criado com sucesso.');
 
-            $content = $renderTemplate('admin/partials/project_form.php', [
-                'project' => $project,
-                'triggerOptions' => [],
-                'selectedTrigger' => 'none',
-                'errorMessage' => null,
+            $content = $renderTemplate('admin/partials/projects.php', [
+                'projects' => $repository->listAll(),
+                'flashMessages' => Flash::pull(),
             ]);
 
             $response->getBody()->write($content);
@@ -339,9 +356,19 @@ return static function (App $app): void {
 
         $group->get('/partials/surveys', static function (Request $request, Response $response) use ($renderTemplate): Response {
             $repository = new SurveyRepository();
+            $projectRepository = new ProjectRepository();
+
+            $queryParams = $request->getQueryParams();
+            $filterProjectId = (int) ($queryParams['project_id'] ?? 0);
+
+            $filterProject = null;
+            if ($filterProjectId > 0) {
+                $filterProject = $projectRepository->findById($filterProjectId);
+            }
 
             $content = $renderTemplate('admin/partials/surveys.php', [
-                'surveys' => $repository->listWithProject(),
+                'surveys' => $filterProjectId > 0 ? $repository->listByProject($filterProjectId) : $repository->listWithProject(),
+                'filterProject' => $filterProject,
                 'errorMessage' => null,
                 'flashMessages' => Flash::pull(),
             ]);

@@ -7,8 +7,9 @@
             </div>
             <button
                 class="btn alert-success xs-m-15-t"
+                data-modal-show="project-form-modal"
                 hx-get="/admin/projects/form"
-                hx-target="#project-form-panel"
+                hx-target="#project-modal-body"
                 hx-swap="innerHTML"
             >
                 Novo Projeto
@@ -28,18 +29,12 @@
         </div>
 
         <div class="f-col">
-            <div id="project-form-panel" class="card p-20-all m-20-b">
-                <h3 class="fs-8 fw-700 m-0-b">Criar Projeto</h3>
-                <p class="m-10-t m-0-b">Clique em "Novo Projeto" para abrir o formulário.</p>
-            </div>
-
             <div class="card p-15-all m-20-b">
                 <div class="table-responsive">
                     <table class="table w-100">
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>Slug</th>
                                 <th>Chave</th>
                                 <th>Status</th>
                                 <th class="text-right">Ações</th>
@@ -52,16 +47,33 @@
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($projects as $project): ?>
-                                    <tr>
+                            <tr>
                                         <td><?= htmlspecialchars((string) $project['name'], ENT_QUOTES, 'UTF-8') ?></td>
-                                        <td><?= htmlspecialchars((string) $project['slug'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td><code><?= htmlspecialchars((string) $project['public_key'], ENT_QUOTES, 'UTF-8') ?></code></td>
                                         <td><?= ((int) $project['is_active'] === 1) ? 'Ativo' : 'Inativo' ?></td>
                                         <td class="text-right">
                                             <button
                                                 class="btn alert-info"
+                                                hx-get="/admin/partials/surveys?project_id=<?= (int) $project['id'] ?>"
+                                                hx-target="#admin-content"
+                                                hx-swap="innerHTML"
+                                            >
+                                                Pesquisas
+                                            </button>
+                                            <button
+                                                class="btn alert-info"
+                                                data-modal-show="snippet-modal"
+                                                hx-get="/admin/projects/snippet/<?= (int) $project['id'] ?>"
+                                                hx-target="#snippet-modal-body"
+                                                hx-swap="innerHTML"
+                                            >
+                                                Snippet
+                                            </button>
+                                            <button
+                                                class="btn alert-info"
+                                                data-modal-show="project-form-modal"
                                                 hx-get="/admin/projects/form/<?= (int) $project['id'] ?>"
-                                                hx-target="#project-form-panel"
+                                                hx-target="#project-modal-body"
                                                 hx-swap="innerHTML"
                                             >
                                                 Editar

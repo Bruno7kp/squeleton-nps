@@ -214,8 +214,8 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
         var decimals = parseInt(target.getAttribute('data-counter-decimals') || '0', 10);
         var suffix = target.textContent.trim().endsWith('%') ? '%' : '';
 
-        if (window.counterUp) {
-            counterUp(target, {
+        if (window.counterUp && typeof window.counterUp.default === 'function') {
+            window.counterUp.default(target, {
                 duration: 800,
                 delay: 16,
                 formatter: function (value) {

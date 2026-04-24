@@ -3,12 +3,24 @@
         <div class="f-row f-items-center f-justify-between xs-f-col xs-f-items-start">
             <div>
                 <h2 class="fs-10 fw-700 m-0-b">Pesquisas</h2>
-                <p class="m-10-t m-0-b">CRUD de pesquisas por projeto com gatilhos dinamicos e status.</p>
+                <?php if (!empty($filterProject)): ?>
+                    <p class="m-10-t m-0-b">
+                        Projeto: <strong><?= htmlspecialchars((string) $filterProject['name'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        &mdash;
+                        <button class="btn" style="background:none;border:none;padding:0;font-size:inherit;cursor:pointer;text-decoration:underline;"
+                            hx-get="/admin/partials/surveys"
+                            hx-target="#admin-content"
+                            hx-swap="innerHTML">Ver todas</button>
+                    </p>
+                <?php else: ?>
+                    <p class="m-10-t m-0-b">CRUD de pesquisas por projeto com gatilhos dinamicos e status.</p>
+                <?php endif; ?>
             </div>
             <button
                 class="btn alert-success xs-m-15-t"
+                data-modal-show="survey-form-modal"
                 hx-get="/admin/surveys/form"
-                hx-target="#survey-form-panel"
+                hx-target="#survey-modal-body"
                 hx-swap="innerHTML"
             >
                 Nova Pesquisa
@@ -29,11 +41,6 @@
         </div>
 
         <div class="f-col">
-            <div id="survey-form-panel" class="card p-20-all m-20-b">
-                <h3 class="fs-8 fw-700 m-0-b">Criar Pesquisa</h3>
-                <p class="m-10-t m-0-b">Clique em "Nova Pesquisa" para abrir o formulário.</p>
-            </div>
-
             <div class="card p-15-all m-20-b">
                 <div class="table-responsive">
                     <table class="table w-100">
@@ -69,8 +76,9 @@
                                             </button>
                                             <button
                                                 class="btn alert-info"
+                                                data-modal-show="survey-form-modal"
                                                 hx-get="/admin/surveys/form/<?= (int) $survey['id'] ?>"
-                                                hx-target="#survey-form-panel"
+                                                hx-target="#survey-modal-body"
                                                 hx-swap="innerHTML"
                                             >
                                                 Editar

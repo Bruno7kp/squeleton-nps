@@ -127,8 +127,8 @@
                         var value = result.data[key] == null ? 0 : result.data[key];
                         target.textContent = String(value);
 
-                        if (window.counterUp) {
-                            counterUp(target, {
+                        if (window.counterUp && typeof window.counterUp.default === 'function') {
+                            window.counterUp.default(target, {
                                 duration: 900,
                                 delay: 12,
                             });

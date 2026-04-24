@@ -23,8 +23,9 @@
             <div class="f-row f-gap-10 xs-m-15-t">
                 <button
                     class="btn alert-success"
+                    data-modal-show="question-form-modal"
                     hx-get="/admin/questions/form?survey_id=<?= (int) ($survey['id'] ?? 0) ?>"
-                    hx-target="#question-form-panel"
+                    hx-target="#question-modal-body"
                     hx-swap="innerHTML"
                 >
                     Nova Pergunta
@@ -50,11 +51,6 @@
 
         <div id="question-success-messages" style="display:none;">
             <?= htmlspecialchars((string) json_encode($flashMessages ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8') ?>
-        </div>
-
-        <div id="question-form-panel" class="card p-20-all">
-            <h3 class="fs-8 fw-700 m-0-b">Nova Pergunta</h3>
-            <p class="m-10-t m-0-b">Clique em "Nova Pergunta" para abrir o formulário.</p>
         </div>
 
         <div class="card p-15-all">
@@ -101,7 +97,12 @@
                                                     <span class="iccon-arrow-down-1"></span>
                                                 </button>
                                             </form>
-                                            <button class="btn alert-info admin-btn-icon" hx-get="/admin/questions/form/<?= (int) $question['id'] ?>" hx-target="#question-form-panel" hx-swap="innerHTML" title="Editar pergunta" aria-label="Editar pergunta">
+                                            <button class="btn alert-info admin-btn-icon"
+                                                data-modal-show="question-form-modal"
+                                                hx-get="/admin/questions/form/<?= (int) $question['id'] ?>"
+                                                hx-target="#question-modal-body"
+                                                hx-swap="innerHTML"
+                                                title="Editar pergunta" aria-label="Editar pergunta">
                                                 <span class="iccon-edit-1"></span>
                                             </button>
                                             <form class="m-0-b question-action-form" hx-post="/admin/questions/<?= (int) $question['id'] ?>/delete" hx-target="#admin-content" hx-swap="innerHTML">

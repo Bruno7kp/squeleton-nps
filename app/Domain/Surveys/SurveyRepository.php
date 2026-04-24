@@ -16,16 +16,41 @@ final class SurveyRepository
 
     public function listWithProject(): array
     {
-        $stmt = $this->connection()->query(
-            'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.title, s.description,
-                    s.created_at, s.updated_at, p.name AS project_name,
-                    GROUP_CONCAT(st.trigger_key, ", ") AS trigger_keys
-             FROM surveys s
-             INNER JOIN projects p ON p.id = s.project_id
-             LEFT JOIN survey_triggers st ON st.survey_id = s.id
-             GROUP BY s.id
-             ORDER BY s.id DESC'
-        );
+        return $this->listFiltered(0);
+    }
+
+    public function listByProject(int $projectId): array
+    {
+        return $this->listFiltered($projectId);
+    }
+
+    private function listFiltered(int $projectId): array
+    {
+        if ($projectId > 0) {
+            $stmt = $this->connection()->prepare(
+                'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.title, s.description,
+                        s.created_at, s.updated_at, p.name AS project_name,
+                        GROUP_CONCAT(st.trigger_key, ", ") AS trigger_keys
+                 FROM surveys s
+                 INNER JOIN projects p ON p.id = s.project_id
+                 LEFT JOIN survey_triggers st ON st.survey_id = s.id
+                 WHERE s.project_id = :project_id
+                 GROUP BY s.id
+                 ORDER BY s.id DESC'
+            );
+            $stmt->execute(['project_id' => $projectId]);
+        } else {
+            $stmt = $this->connection()->query(
+                'SELECT s.id, s.project_id, s.name, s.slug, s.status, s.title, s.description,
+                        s.created_at, s.updated_at, p.name AS project_name,
+                        GROUP_CONCAT(st.trigger_key, ", ") AS trigger_keys
+                 FROM surveys s
+                 INNER JOIN projects p ON p.id = s.project_id
+                 LEFT JOIN survey_triggers st ON st.survey_id = s.id
+                 GROUP BY s.id
+                 ORDER BY s.id DESC'
+            );
+        }
 
         $surveys = $stmt->fetchAll() ?: [];
 
