@@ -24,19 +24,19 @@
                     <?php endif; ?>
                 <?php endforeach; ?>
 
-                <form method="post" action="/login" class="f-col f-gap-15">
+                <form method="post" action="/login" class="f-col f-gap-20 m-5-t">
                     <?= \App\Support\Csrf::hiddenInput() ?>
-                    <label class="f-col f-gap-5" for="username">
-                        <span class="fw-600">Usuário</span>
-                        <input id="username" class="form-control" type="text" name="username" autocomplete="username" required>
+                    <label class="d-flex f-col f-gap-8" for="username">
+                        <span class="fw-600 fs-6">Usuário</span>
+                        <input id="username" class="form-control w-100" type="text" name="username" autocomplete="username" required>
                     </label>
 
-                    <label class="f-col f-gap-5" for="password">
-                        <span class="fw-600">Senha</span>
-                        <input id="password" class="form-control" type="password" name="password" autocomplete="current-password" required>
+                    <label class="d-flex f-col f-gap-8" for="password">
+                        <span class="fw-600 fs-6">Senha</span>
+                        <input id="password" class="form-control w-100" type="password" name="password" autocomplete="current-password" required>
                     </label>
 
-                    <button class="btn alert-info w-100" type="submit">Entrar</button>
+                    <button class="btn alert-info w-100 m-5-t" type="submit">Entrar</button>
                 </form>
             </div>
         </div>
