@@ -96,6 +96,116 @@
     document.body.addEventListener('htmx:afterRequest', hideLoading);
     document.body.addEventListener('htmx:responseError', hideLoading);
 
+    function initWidgetSnippetBuilder(container) {
+        var root = container ? container.querySelector('.widget-embed-config') : document.querySelector('.widget-embed-config');
+        if (!root || root.dataset.widgetSnippetInitialized === '1') {
+            return;
+        }
+
+        var publicKey = root.dataset.publicKey || '';
+        var defaultAutoOpen = root.dataset.npsAutoOpen !== 'false';
+        var defaultShowFloatButton = root.dataset.npsShowFloatButton !== 'false';
+
+        if (!publicKey) {
+            return;
+        }
+
+        var triggerSelect = root.querySelector('#widget-trigger');
+        var autoOpenCheckbox = root.querySelector('#widget-autoload');
+        var showButtonCheckbox = root.querySelector('#widget-show-float-button');
+        var snippetElement = root.querySelector('#widget-embed-snippet');
+
+        if (!triggerSelect || !autoOpenCheckbox || !showButtonCheckbox || !snippetElement) {
+            return;
+        }
+
+        root.dataset.widgetSnippetInitialized = '1';
+
+        function updateSnippet() {
+            var trigger = triggerSelect.value;
+            var shouldDisable = trigger === 'none';
+
+            if (shouldDisable) {
+                autoOpenCheckbox.checked = false;
+                showButtonCheckbox.checked = false;
+            }
+
+            autoOpenCheckbox.disabled = shouldDisable;
+            showButtonCheckbox.disabled = shouldDisable;
+            snippetElement.dataset.npsTrigger = trigger;
+            snippetElement.textContent = computeSnippet(publicKey, trigger, autoOpenCheckbox.checked, showButtonCheckbox.checked);
+        }
+
+        triggerSelect.addEventListener('change', updateSnippet);
+        autoOpenCheckbox.addEventListener('change', updateSnippet);
+        showButtonCheckbox.addEventListener('change', updateSnippet);
+        updateSnippet();
+    }
+
+    function computeSnippet(publicKey, trigger, autoOpen, showFloatButton) {
+        return '<script src="https://seu-dominio.com/widget-loader.js" data-nps-key="' + publicKey + '" data-nps-trigger="' + trigger + '" data-nps-auto-open="' + (autoOpen ? 'true' : 'false') + '" data-nps-show-float-button="' + (showFloatButton ? 'true' : 'false') + '" defer><\/script>';
+    }
+
+    function slugify(value) {
+        return String(value)
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    function initProjectSlugAutoFill(container) {
+        var root = container ? container.querySelector('form') : document.querySelector('form');
+        if (!root) {
+            return;
+        }
+
+        var nameInput = root.querySelector('#project-name');
+        var slugInput = root.querySelector('#project-slug');
+        if (!nameInput || !slugInput) {
+            return;
+        }
+
+        var manual = slugInput.value !== '' && slugInput.value !== slugify(nameInput.value);
+
+        function updateSlug() {
+            var generated = slugify(nameInput.value);
+            if (!manual) {
+                slugInput.value = generated;
+            }
+        }
+
+        nameInput.addEventListener('input', function () {
+            updateSlug();
+            manual = slugInput.value !== slugify(nameInput.value);
+        });
+
+        slugInput.addEventListener('input', function () {
+            manual = slugInput.value !== slugify(nameInput.value);
+        });
+
+        updateSlug();
+    }
+
+    function onHtmxSwap(event) {
+        var target = event && event.detail && event.detail.target ? event.detail.target : document.body;
+        initWidgetSnippetBuilder(target);
+        initProjectSlugAutoFill(target);
+    }
+
+    document.body.addEventListener('htmx:afterSwap', onHtmxSwap);
+    document.body.addEventListener('htmx:afterOnLoad', onHtmxSwap);
+    document.body.addEventListener('htmx:afterSettle', onHtmxSwap);
+
+    var widgetSnippetObserver = new MutationObserver(function () {
+        initWidgetSnippetBuilder(document.body);
+        initProjectSlugAutoFill(document.body);
+    });
+    widgetSnippetObserver.observe(document.body, { childList: true, subtree: true });
+
+    initWidgetSnippetBuilder(document.body);
+    initProjectSlugAutoFill(document.body);
+
     messages.forEach(function (message) {
         if (message.type !== 'success' || typeof Toastify !== 'function') {
             return;

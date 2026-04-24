@@ -46,6 +46,27 @@ final class SurveyTriggerRepository
         return array_values(array_map(static fn (mixed $row): string => (string) $row, $rows));
     }
 
+    public function listByProjectId(int $projectId): array
+    {
+        $stmt = $this->connection()->prepare(
+            'SELECT DISTINCT trigger_key AS trigger_value
+             FROM survey_triggers
+             WHERE project_id = :project_id
+             UNION
+             SELECT DISTINCT trigger_event AS trigger_value
+             FROM surveys
+             WHERE project_id = :project_id
+               AND TRIM(trigger_event) <> ""
+             ORDER BY trigger_value ASC'
+        );
+
+        $stmt->execute(['project_id' => $projectId]);
+
+        $rows = $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+
+        return array_values(array_map(static fn (mixed $row): string => (string) $row, $rows));
+    }
+
     public function findConflicts(int $projectId, array $triggerKeys, ?int $exceptSurveyId = null): array
     {
         if ($triggerKeys === []) {

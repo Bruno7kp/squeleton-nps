@@ -169,6 +169,8 @@ return static function (App $app): void {
                     'is_active' => 1,
                     'public_key' => null,
                 ],
+                'triggerOptions' => [],
+                'selectedTrigger' => 'none',
                 'errorMessage' => null,
             ]);
 
@@ -185,8 +187,14 @@ return static function (App $app): void {
                 return $response->withStatus(404);
             }
 
+            $triggerRepository = new SurveyTriggerRepository();
+            $triggerOptions = $triggerRepository->listByProjectId((int) $project['id']);
+            $selectedTrigger = $triggerOptions[0] ?? 'none';
+
             $content = $renderTemplate('admin/partials/project_form.php', [
                 'project' => $project,
+                'triggerOptions' => $triggerOptions,
+                'selectedTrigger' => $selectedTrigger,
                 'errorMessage' => null,
             ]);
 
