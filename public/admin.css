@@ -123,10 +123,20 @@ body.admin-app .btn.alert-warning:hover {
 }
 
 body.admin-app .admin-btn-icon {
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
-    padding: 0;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border-radius: 8px;
+    flex: 0 0 auto;
+}
+
+body.admin-app .admin-btn-icon > span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -137,7 +147,21 @@ body.admin-app .admin-btn-icon .iccon-arrow-up-1,
 body.admin-app .admin-btn-icon .iccon-arrow-down-1,
 body.admin-app .admin-btn-icon .iccon-edit-1,
 body.admin-app .admin-btn-icon .iccon-delete-1 {
-    font-size: 16px;
+    font-size: 18px;
+    color: inherit;
+    line-height: 1;
+}
+
+body.admin-app .btn.alert-danger {
+    background: linear-gradient(135deg, #d6483b 0%, #b73a2f 100%);
+    border: 0;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+body.admin-app .btn.alert-danger:hover {
+    background: linear-gradient(135deg, #b73a2f 0%, #952d24 100%);
+    color: #ffffff;
 }
 
 body.admin-app .question-actions-row {

@@ -15,43 +15,43 @@
             <div class="d-flex f-items-center xs-f-items-start">
                 <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
             </div>
-            <div class="w-100 md-w-auto">
-                <nav class="d-flex f-items-center f-gap-10 xs-f-col md-f-row md-f-justify-end" aria-label="Menu principal admin">
-                    <button
-                        class="btn admin-top-nav-btn"
-                        hx-get="/admin/partials/dashboard"
-                        hx-target="#admin-content"
-                        hx-swap="innerHTML"
-                    >
-                        <span class="iccon-chart-1" aria-hidden="true"></span>
-                        <span>Home</span>
+            <nav class="d-flex f-items-center f-gap-10 f-grow-1 f-justify-center xs-f-col md-f-row" aria-label="Menu principal admin">
+                <button
+                    class="btn admin-top-nav-btn"
+                    hx-get="/admin/partials/dashboard"
+                    hx-target="#admin-content"
+                    hx-swap="innerHTML"
+                >
+                    <span class="iccon-chart-1" aria-hidden="true"></span>
+                    <span>Home</span>
+                </button>
+                <button
+                    class="btn admin-top-nav-btn"
+                    hx-get="/admin/partials/projects"
+                    hx-target="#admin-content"
+                    hx-swap="innerHTML"
+                >
+                    <span class="iccon-settings-1" aria-hidden="true"></span>
+                    <span>Projetos</span>
+                </button>
+                <button
+                    class="btn admin-top-nav-btn"
+                    hx-get="/admin/partials/surveys"
+                    hx-target="#admin-content"
+                    hx-swap="innerHTML"
+                >
+                    <span class="iccon-search-1" aria-hidden="true"></span>
+                    <span>Pesquisas</span>
+                </button>
+            </nav>
+            <div class="d-flex f-items-center xs-w-100 md-w-auto">
+                <form method="post" action="/logout" class="m-0-b xs-w-100">
+                    <?= \App\Support\Csrf::hiddenInput() ?>
+                    <button class="btn admin-top-nav-btn admin-top-nav-btn-danger xs-w-100" type="submit">
+                        <span class="iccon-undo-1" aria-hidden="true"></span>
+                        <span>Sair</span>
                     </button>
-                    <button
-                        class="btn admin-top-nav-btn"
-                        hx-get="/admin/partials/projects"
-                        hx-target="#admin-content"
-                        hx-swap="innerHTML"
-                    >
-                        <span class="iccon-settings-1" aria-hidden="true"></span>
-                        <span>Projetos</span>
-                    </button>
-                    <button
-                        class="btn admin-top-nav-btn"
-                        hx-get="/admin/partials/surveys"
-                        hx-target="#admin-content"
-                        hx-swap="innerHTML"
-                    >
-                        <span class="iccon-search-1" aria-hidden="true"></span>
-                        <span>Pesquisas</span>
-                    </button>
-                    <form method="post" action="/logout" class="m-0-b">
-                        <?= \App\Support\Csrf::hiddenInput() ?>
-                        <button class="btn admin-top-nav-btn admin-top-nav-btn-danger" type="submit">
-                            <span class="iccon-undo-1" aria-hidden="true"></span>
-                            <span>Sair</span>
-                        </button>
-                    </form>
-                </nav>
+                </form>
             </div>
         </div>
     </div>
