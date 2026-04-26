@@ -11,15 +11,13 @@
 <body class="admin-app">
 <header class="container-fluid p-20-all m-20-b">
     <div class="container">
-        <div class="row f-items-center f-justify-between">
-            <div class="c-xs-12 c-lg-auto">
-                <div class="admin-top-brand">
-                    <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
-                    <span class="admin-top-brand-subtitle fs-5">Gestão inicial da plataforma</span>
-                </div>
+        <div class="d-flex f-items-center f-justify-between f-gap-15 xs-f-col md-f-row">
+            <div class="d-flex f-items-center f-gap-10 xs-f-col md-f-row xs-f-items-start md-f-items-center">
+                <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
+                <span class="admin-top-brand-subtitle fs-5">Gestão inicial da plataforma</span>
             </div>
-            <div class="c-xs-12 c-lg-auto admin-top-nav-wrap">
-                <nav class="admin-top-nav" aria-label="Menu principal admin">
+            <div class="w-100 md-w-auto">
+                <nav class="d-flex f-items-center f-gap-10 xs-f-col md-f-row md-f-justify-end" aria-label="Menu principal admin">
                     <button
                         class="btn admin-top-nav-btn"
                         hx-get="/admin/partials/dashboard"

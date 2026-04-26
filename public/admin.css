@@ -1,3 +1,4 @@
+@layer admin {
 :root {
     --admin-bg: #eef4f8;
     --admin-surface: #ffffff;
@@ -36,16 +37,9 @@ body.admin-app header span {
     color: inherit;
 }
 
-body.admin-app .admin-top-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    line-height: 1.1;
-}
-
 body.admin-app .admin-top-brand-subtitle {
     opacity: 0.9;
-    margin-top: 2px;
+    line-height: 1.1;
 }
 
 body.admin-app .card {
@@ -53,22 +47,6 @@ body.admin-app .card {
     border: 1px solid var(--admin-border);
     border-radius: 14px;
     box-shadow: 0 8px 24px rgba(13, 41, 61, 0.08);
-}
-
-body.admin-app .admin-top-nav {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-body.admin-app .admin-top-nav-wrap {
-    margin-top: 0;
-}
-
-body.admin-app .admin-top-nav form {
-    margin: 0;
 }
 
 body.admin-app .admin-top-nav-btn {
@@ -260,23 +238,9 @@ body.admin-app .modal-popup {
 }
 
 @media (max-width: 991px) {
-    body.admin-app .admin-top-brand {
-        display: flex;
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-
-    body.admin-app .admin-top-nav-wrap {
-        margin-top: 12px;
-    }
-
-    body.admin-app .admin-top-nav {
-        justify-content: flex-start;
-    }
-
     body.admin-app .admin-top-nav-btn {
         width: 100%;
         justify-content: center;
     }
 }
+    }
