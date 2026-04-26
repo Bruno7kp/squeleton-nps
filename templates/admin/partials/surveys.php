@@ -13,7 +13,7 @@
                             hx-swap="innerHTML">Ver todas</button>
                     </p>
                 <?php else: ?>
-                    <p class="m-10-t m-0-b">CRUD de pesquisas por projeto com gatilhos dinamicos e status.</p>
+                    <p class="m-10-t m-0-b">Pesquisas por projeto com gatilhos dinamicos e status.</p>
                 <?php endif; ?>
             </div>
             <button
@@ -27,7 +27,7 @@
             </button>
         </div>
 
-        <div id="survey-feedback">
+        <div id="survey-feedback" class="m-10-b">
             <?php if (!empty($errorMessage ?? '')): ?>
                 <div class="alert alert-danger p-15-all f-row f-items-center f-justify-between f-gap-10" role="alert">
                     <span><?= htmlspecialchars((string) $errorMessage, ENT_QUOTES, 'UTF-8') ?></span>

@@ -11,17 +11,24 @@
     --admin-topbar: #0f1f2d;
 }
 
+html {
+    min-height: 100%;
+}
+
 body.admin-app,
 body.admin-login {
-    background:
-        radial-gradient(circle at 8% 8%, rgba(96, 201, 179, 0.24) 0%, rgba(96, 201, 179, 0) 34%),
-        radial-gradient(circle at 90% 0%, rgba(82, 156, 240, 0.18) 0%, rgba(82, 156, 240, 0) 30%),
-        var(--admin-bg);
-    background-repeat: no-repeat;
-    background-size: 1400px 900px, 1200px 760px, auto;
+    background-color: var(--admin-bg);
+    background-image:
+        radial-gradient(circle at 8% 8%, rgba(96, 201, 179, 0.28) 0%, rgba(96, 201, 179, 0) 45%),
+        radial-gradient(circle at 92% 0%, rgba(82, 156, 240, 0.22) 0%, rgba(82, 156, 240, 0) 40%);
+    background-repeat: no-repeat, no-repeat;
+    background-size: 100% 100%, 100% 100%;
     background-attachment: fixed;
     color: var(--admin-ink);
+    width: 100%;
     min-height: 100vh;
+    margin: 0;
+    border-top: 0;
 }
 
 body.admin-app header {
@@ -260,6 +267,7 @@ body.admin-login main {
     min-height: 100vh;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 body.admin-login .card {
