@@ -18,7 +18,7 @@
                     <span class="admin-top-brand-subtitle fs-5">Gestão inicial da plataforma</span>
                 </div>
             </div>
-            <div class="c-xs-12 c-lg-auto xs-m-15-t lg-m-0-t">
+            <div class="c-xs-12 c-lg-auto admin-top-nav-wrap">
                 <nav class="admin-top-nav" aria-label="Menu principal admin">
                     <button
                         class="btn admin-top-nav-btn"

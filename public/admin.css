@@ -63,6 +63,10 @@ body.admin-app .admin-top-nav {
     gap: 10px;
 }
 
+body.admin-app .admin-top-nav-wrap {
+    margin-top: 0;
+}
+
 body.admin-app .admin-top-nav form {
     margin: 0;
 }
@@ -261,6 +265,10 @@ body.admin-app .modal-popup {
         width: 100%;
         flex-wrap: wrap;
         gap: 6px;
+    }
+
+    body.admin-app .admin-top-nav-wrap {
+        margin-top: 12px;
     }
 
     body.admin-app .admin-top-nav {
