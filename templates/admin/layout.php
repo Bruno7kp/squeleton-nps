@@ -13,8 +13,10 @@
     <div class="container">
         <div class="row f-items-center f-justify-between">
             <div class="c-xs-12 c-lg-auto">
-                <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
-                <p class="fs-5 m-5-t m-0-b">Gestão inicial da plataforma</p>
+                <div class="admin-top-brand">
+                    <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
+                    <span class="admin-top-brand-subtitle fs-5">Gestão inicial da plataforma</span>
+                </div>
             </div>
             <div class="c-xs-12 c-lg-auto xs-m-15-t lg-m-0-t">
                 <nav class="admin-top-nav" aria-label="Menu principal admin">

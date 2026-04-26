@@ -36,6 +36,18 @@ body.admin-app header span {
     color: inherit;
 }
 
+body.admin-app .admin-top-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.1;
+}
+
+body.admin-app .admin-top-brand-subtitle {
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
 body.admin-app .card {
     background: var(--admin-surface);
     border: 1px solid var(--admin-border);
@@ -244,6 +256,13 @@ body.admin-app .modal-popup {
 }
 
 @media (max-width: 991px) {
+    body.admin-app .admin-top-brand {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
     body.admin-app .admin-top-nav {
         justify-content: flex-start;
     }
