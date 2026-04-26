@@ -97,7 +97,7 @@
                                                     <span class="iccon-arrow-down-1"></span>
                                                 </button>
                                             </form>
-                                            <button class="btn alert-info admin-btn-icon"
+                                            <button class="btn alert-warning admin-btn-icon"
                                                 data-modal-show="question-form-modal"
                                                 hx-get="/admin/questions/form/<?= (int) $question['id'] ?>"
                                                 hx-target="#question-modal-body"

@@ -75,7 +75,7 @@
                                                 Perguntas
                                             </button>
                                             <button
-                                                class="btn alert-info"
+                                                class="btn alert-warning"
                                                 data-modal-show="survey-form-modal"
                                                 hx-get="/admin/surveys/form/<?= (int) $survey['id'] ?>"
                                                 hx-target="#survey-modal-body"

@@ -70,7 +70,7 @@
                                                 Snippet
                                             </button>
                                             <button
-                                                class="btn alert-info"
+                                                class="btn alert-warning"
                                                 data-modal-show="project-form-modal"
                                                 hx-get="/admin/projects/form/<?= (int) $project['id'] ?>"
                                                 hx-target="#project-modal-body"

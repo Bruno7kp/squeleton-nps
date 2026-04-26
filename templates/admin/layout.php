@@ -12,9 +12,8 @@
 <header class="container-fluid p-20-all m-20-b">
     <div class="container">
         <div class="d-flex f-items-center f-justify-between f-gap-15 xs-f-col md-f-row">
-            <div class="d-flex f-items-center f-gap-10 xs-f-col md-f-row xs-f-items-start md-f-items-center">
+            <div class="d-flex f-items-center xs-f-items-start">
                 <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
-                <span class="admin-top-brand-subtitle fs-5">Gestão inicial da plataforma</span>
             </div>
             <div class="w-100 md-w-auto">
                 <nav class="d-flex f-items-center f-gap-10 xs-f-col md-f-row md-f-justify-end" aria-label="Menu principal admin">
