@@ -11,10 +11,48 @@
 <body class="admin-app">
 <header class="container-fluid p-20-all m-20-b">
     <div class="container">
-        <div class="row f-items-center">
-            <div class="c-xs-12 c-md-auto">
+        <div class="row f-items-center f-justify-between">
+            <div class="c-xs-12 c-lg-auto">
                 <h1 class="fs-11 fw-700 m-0-b">NPS Admin</h1>
                 <p class="fs-5 m-5-t m-0-b">Gestão inicial da plataforma</p>
+            </div>
+            <div class="c-xs-12 c-lg-auto xs-m-15-t lg-m-0-t">
+                <nav class="admin-top-nav" aria-label="Menu principal admin">
+                    <button
+                        class="btn admin-top-nav-btn"
+                        hx-get="/admin/partials/dashboard"
+                        hx-target="#admin-content"
+                        hx-swap="innerHTML"
+                    >
+                        <span class="iccon-chart-1" aria-hidden="true"></span>
+                        <span>Home</span>
+                    </button>
+                    <button
+                        class="btn admin-top-nav-btn"
+                        hx-get="/admin/partials/projects"
+                        hx-target="#admin-content"
+                        hx-swap="innerHTML"
+                    >
+                        <span class="iccon-settings-1" aria-hidden="true"></span>
+                        <span>Projetos</span>
+                    </button>
+                    <button
+                        class="btn admin-top-nav-btn"
+                        hx-get="/admin/partials/surveys"
+                        hx-target="#admin-content"
+                        hx-swap="innerHTML"
+                    >
+                        <span class="iccon-search-1" aria-hidden="true"></span>
+                        <span>Pesquisas</span>
+                    </button>
+                    <form method="post" action="/logout" class="m-0-b">
+                        <?= \App\Support\Csrf::hiddenInput() ?>
+                        <button class="btn admin-top-nav-btn admin-top-nav-btn-danger" type="submit">
+                            <span class="iccon-undo-1" aria-hidden="true"></span>
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                </nav>
             </div>
         </div>
     </div>
@@ -26,45 +64,7 @@
     </div>
 
     <section class="row">
-        <div class="c-xs-12 c-md-2">
-            <aside class="card p-20-all">
-                <div class="f-row f-items-center f-justify-between m-0-b m-15-b">
-                    <h2 class="fs-8 fw-700 m-0-b">Menu</h2>
-                </div>
-                <div class="f-col f-gap-15">
-                    <button
-                        class="btn alert-info text-left w-100 p-10-t p-10-b m-10-b"
-                        hx-get="/admin/partials/dashboard"
-                        hx-target="#admin-content"
-                        hx-swap="innerHTML"
-                    >
-                        Dashboard e Analytics
-                    </button>
-                    <button
-                        class="btn alert-info text-left w-100 p-10-t p-10-b m-10-b"
-                        hx-get="/admin/partials/projects"
-                        hx-target="#admin-content"
-                        hx-swap="innerHTML"
-                    >
-                        Projetos
-                    </button>
-                    <button
-                        class="btn alert-info text-left w-100 p-10-t p-10-b"
-                        hx-get="/admin/partials/surveys"
-                        hx-target="#admin-content"
-                        hx-swap="innerHTML"
-                    >
-                        Pesquisas
-                    </button>
-                    <form method="post" action="/logout" class="m-0-b m-10-t">
-                        <?= \App\Support\Csrf::hiddenInput() ?>
-                        <button class="btn alert-danger text-left w-100 p-10-t p-10-b" type="submit">Sair</button>
-                    </form>
-                </div>
-            </aside>
-        </div>
-
-        <div class="c-xs-12 c-md-10 xs-m-20-t">
+        <div class="c-xs-12">
             <div class="card p-20-all" id="admin-content" hx-get="/admin/partials/dashboard" hx-trigger="load" hx-swap="innerHTML">
                 <p>Carregando painel...</p>
             </div>

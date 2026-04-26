@@ -43,16 +43,53 @@ body.admin-app .card {
     box-shadow: 0 8px 24px rgba(13, 41, 61, 0.08);
 }
 
-body.admin-app aside.card {
-    position: sticky;
-    top: 20px;
-    background: linear-gradient(180deg, #f9fcff 0%, #f2f8ff 100%);
-    padding: 16px;
+body.admin-app .admin-top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-body.admin-app aside.card .btn {
-    white-space: normal;
-    line-height: 1.25;
+body.admin-app .admin-top-nav form {
+    margin: 0;
+}
+
+body.admin-app .admin-top-nav-btn {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.08);
+    color: #edf6ff;
+    font-weight: 700;
+    min-height: 40px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+body.admin-app .admin-top-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+body.admin-app .admin-top-nav-btn .iccon-chart-1,
+body.admin-app .admin-top-nav-btn .iccon-settings-1,
+body.admin-app .admin-top-nav-btn .iccon-search-1,
+body.admin-app .admin-top-nav-btn .iccon-undo-1 {
+    font-size: 15px;
+}
+
+body.admin-app .admin-top-nav-btn-danger {
+    border-color: rgba(255, 132, 132, 0.45);
+    background: rgba(214, 62, 62, 0.2);
+}
+
+body.admin-app .admin-top-nav-btn-danger:hover {
+    background: rgba(214, 62, 62, 0.35);
+    border-color: rgba(255, 165, 165, 0.55);
 }
 
 body.admin-app #admin-content {
@@ -207,7 +244,12 @@ body.admin-app .modal-popup {
 }
 
 @media (max-width: 991px) {
-    body.admin-app aside.card {
-        position: static;
+    body.admin-app .admin-top-nav {
+        justify-content: flex-start;
+    }
+
+    body.admin-app .admin-top-nav-btn {
+        width: 100%;
+        justify-content: center;
     }
 }
