@@ -460,7 +460,7 @@ return static function (App $app): void {
             if (!in_array($status, $statusOptions, true)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Status inválido. Use draft ou published.',
+                    'errorMessage' => 'Status inválido. Use rascunho ou publicado.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);
@@ -567,7 +567,7 @@ return static function (App $app): void {
             if (!in_array($status, $statusOptions, true)) {
                 $content = $renderTemplate('admin/partials/surveys.php', [
                     'surveys' => $surveyRepository->listWithProject(),
-                    'errorMessage' => 'Status inválido. Use draft ou published.',
+                    'errorMessage' => 'Status inválido. Use rascunho ou publicado.',
                     'flashMessages' => Flash::pull(),
                 ]);
                 $response->getBody()->write($content);

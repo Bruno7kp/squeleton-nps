@@ -1,3 +1,17 @@
+<?php
+$translateStatus = static function (string $status): string {
+    if ($status === 'draft') {
+        return 'rascunho';
+    }
+
+    if ($status === 'published') {
+        return 'publicado';
+    }
+
+    return $status;
+};
+?>
+
 <section>
     <div class="f-col f-gap-20">
         <div class="f-row f-items-center f-justify-between xs-f-col xs-f-items-start">
@@ -64,7 +78,7 @@
                                         <td><?= htmlspecialchars((string) $survey['project_name'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td><?= htmlspecialchars((string) $survey['name'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td><?= htmlspecialchars((string) (($survey['trigger_keys'] ?? '') !== '' ? $survey['trigger_keys'] : '-'), ENT_QUOTES, 'UTF-8') ?></td>
-                                        <td><?= htmlspecialchars((string) $survey['status'], ENT_QUOTES, 'UTF-8') ?></td>
+                                        <td><?= htmlspecialchars((string) $translateStatus((string) $survey['status']), ENT_QUOTES, 'UTF-8') ?></td>
                                         <td class="text-right">
                                             <button
                                                 class="btn alert-info"

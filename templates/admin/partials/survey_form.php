@@ -66,7 +66,7 @@
                     <select id="survey-status" class="form-control w-100" name="status" required>
                         <?php foreach ($statusOptions as $status): ?>
                             <option value="<?= htmlspecialchars((string) $status, ENT_QUOTES, 'UTF-8') ?>" <?= (($survey['status'] ?? '') === $status) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars((string) $status, ENT_QUOTES, 'UTF-8') ?>
+                                <?= htmlspecialchars((string) ($status === 'draft' ? 'rascunho' : ($status === 'published' ? 'publicado' : $status)), ENT_QUOTES, 'UTF-8') ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
