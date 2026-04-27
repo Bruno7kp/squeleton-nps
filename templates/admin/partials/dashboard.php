@@ -9,6 +9,22 @@ $recentSubmissions = $recentSubmissions ?? [];
 $projects = $projects ?? [];
 $surveyOptions = $surveyOptions ?? [];
 $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 'to_date' => ''];
+$formatAnswerValue = static function ($value): string {
+    if ($value === null) {
+        return '-';
+    }
+
+    if (is_array($value)) {
+        return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '-';
+    }
+
+    if (is_bool($value)) {
+        return $value ? 'true' : 'false';
+    }
+
+    $text = trim((string) $value);
+    return $text === '' ? '-' : $text;
+};
 ?>
 
 <section>
@@ -147,6 +163,7 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
                 <table class="table w-100">
                     <thead>
                     <tr>
+                        <th>Ações</th>
                         <th>ID</th>
                         <th>Projeto</th>
                         <th>Pesquisa</th>
@@ -159,12 +176,28 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
                     <tbody>
                     <?php if (empty($recentSubmissions)): ?>
                         <tr>
-                            <td colspan="7">Nenhuma resposta encontrada para os filtros atuais.</td>
+                            <td colspan="8">Nenhuma resposta encontrada para os filtros atuais.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($recentSubmissions as $submission): ?>
+                            <?php
+                            $submissionId = (int) ($submission['id'] ?? 0);
+                            $detailRowId = 'submission-detail-' . $submissionId;
+                            $answers = is_array($submission['answers'] ?? null) ? $submission['answers'] : [];
+                            ?>
                             <tr>
-                                <td>#<?= (int) $submission['id'] ?></td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="btn alert-info"
+                                        data-toggle-submission-detail="<?= htmlspecialchars($detailRowId, ENT_QUOTES, 'UTF-8') ?>"
+                                        aria-expanded="false"
+                                        aria-controls="<?= htmlspecialchars($detailRowId, ENT_QUOTES, 'UTF-8') ?>"
+                                    >
+                                        Expandir
+                                    </button>
+                                </td>
+                                <td>#<?= $submissionId ?></td>
                                 <td><?= htmlspecialchars((string) ($submission['project_name'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars((string) ($submission['survey_name'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars((string) ($submission['trigger_event'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></td>
@@ -173,6 +206,44 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
                                     <?= ((int) ($submission['is_completed'] ?? 0) === 1) ? 'Concluída' : 'Incompleta' ?>
                                 </td>
                                 <td><?= htmlspecialchars((string) ($submission['created_at'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></td>
+                            </tr>
+                            <tr id="<?= htmlspecialchars($detailRowId, ENT_QUOTES, 'UTF-8') ?>" data-submission-detail-row hidden>
+                                <td colspan="8">
+                                    <div class="card p-15-all">
+                                        <div class="row gap-15">
+                                            <div class="c-xs-12 c-md-4">
+                                                <h4 class="fs-6 fw-700 m-0-b m-10-b">Dados do usuário</h4>
+                                                <ul class="m-0-b p-0-l" style="list-style: none;">
+                                                    <li class="m-8-b"><strong>User ID:</strong> <?= htmlspecialchars((string) (($submission['user_identifier'] ?? '') !== '' ? $submission['user_identifier'] : '-'), ENT_QUOTES, 'UTF-8') ?></li>
+                                                    <li class="m-8-b"><strong>Session ID:</strong> <?= htmlspecialchars((string) (($submission['session_identifier'] ?? '') !== '' ? $submission['session_identifier'] : '-'), ENT_QUOTES, 'UTF-8') ?></li>
+                                                    <li class="m-8-b"><strong>URL de origem:</strong> <?= htmlspecialchars((string) (($submission['source_url'] ?? '') !== '' ? $submission['source_url'] : '-'), ENT_QUOTES, 'UTF-8') ?></li>
+                                                    <li class="m-8-b"><strong>User-Agent:</strong> <?= htmlspecialchars((string) (($submission['user_agent'] ?? '') !== '' ? $submission['user_agent'] : '-'), ENT_QUOTES, 'UTF-8') ?></li>
+                                                    <li class="m-8-b"><strong>Hash do IP:</strong> <?= htmlspecialchars((string) (($submission['ip_hash'] ?? '') !== '' ? $submission['ip_hash'] : '-'), ENT_QUOTES, 'UTF-8') ?></li>
+                                                </ul>
+                                            </div>
+                                            <div class="c-xs-12 c-md-8">
+                                                <h4 class="fs-6 fw-700 m-0-b m-10-b">Todas as respostas</h4>
+                                                <?php if (empty($answers)): ?>
+                                                    <p class="m-0-b">Nenhuma resposta salva nesta submissão.</p>
+                                                <?php else: ?>
+                                                    <ul class="m-0-b p-0-l" style="list-style: none;">
+                                                        <?php foreach ($answers as $answer): ?>
+                                                            <?php
+                                                            $questionLabel = trim((string) ($answer['question_label'] ?? ''));
+                                                            $fieldName = trim((string) ($answer['field_name'] ?? ''));
+                                                            $label = $questionLabel !== '' ? $questionLabel : ($fieldName !== '' ? $fieldName : 'Pergunta sem rótulo');
+                                                            ?>
+                                                            <li class="m-10-b">
+                                                                <strong><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>:</strong>
+                                                                <?= htmlspecialchars($formatAnswerValue($answer['answer'] ?? null), ENT_QUOTES, 'UTF-8') ?>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -208,6 +279,35 @@ $filters = $filters ?? ['project_id' => 0, 'survey_id' => 0, 'from_date' => '', 
             window.location.href = '/admin/partials/dashboard';
         });
     }
+
+    root.addEventListener('click', function (event) {
+        var button = event.target.closest('[data-toggle-submission-detail]');
+        if (!button) {
+            return;
+        }
+
+        var rowId = button.getAttribute('data-toggle-submission-detail');
+        if (!rowId) {
+            return;
+        }
+
+        var detailRow = document.getElementById(rowId);
+        if (!detailRow) {
+            return;
+        }
+
+        var isExpanded = !detailRow.hasAttribute('hidden');
+        if (isExpanded) {
+            detailRow.setAttribute('hidden', 'hidden');
+            button.setAttribute('aria-expanded', 'false');
+            button.textContent = 'Expandir';
+            return;
+        }
+
+        detailRow.removeAttribute('hidden');
+        button.setAttribute('aria-expanded', 'true');
+        button.textContent = 'Recolher';
+    });
 
     root.querySelectorAll('[data-counter-value]').forEach(function (target) {
         var rawValue = parseFloat(target.getAttribute('data-counter-value') || '0');

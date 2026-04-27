@@ -109,6 +109,8 @@ final class AnalyticsRepository
                     sub.source_url,
                     sub.user_identifier,
                     sub.session_identifier,
+                    sub.user_agent,
+                    sub.ip_hash,
                     sub.created_at,
                     p.name AS project_name,
                     s.name AS survey_name
@@ -126,7 +128,95 @@ final class AnalyticsRepository
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll() ?: [];
+        $submissions = $stmt->fetchAll() ?: [];
+        if ($submissions === []) {
+            return [];
+        }
+
+        $submissionIds = array_map(
+            static fn(array $submission): int => (int) ($submission['id'] ?? 0),
+            $submissions
+        );
+        $answersBySubmission = $this->answersBySubmissionIds($submissionIds);
+
+        foreach ($submissions as &$submission) {
+            $submissionId = (int) ($submission['id'] ?? 0);
+            $submission['answers'] = $answersBySubmission[$submissionId] ?? [];
+        }
+        unset($submission);
+
+        return $submissions;
+    }
+
+    private function answersBySubmissionIds(array $submissionIds): array
+    {
+        $cleanIds = array_values(array_filter(array_map('intval', $submissionIds), static fn(int $id): bool => $id > 0));
+        if ($cleanIds === []) {
+            return [];
+        }
+
+        $placeholders = [];
+        $params = [];
+
+        foreach ($cleanIds as $index => $submissionId) {
+            $param = 'submission_id_' . $index;
+            $placeholders[] = ':' . $param;
+            $params[$param] = $submissionId;
+        }
+
+        $sql = 'SELECT
+                    sa.submission_id,
+                    sa.question_id,
+                    q.label AS question_label,
+                    q.field_name,
+                    q.question_type,
+                    sa.answer_text,
+                    sa.answer_number,
+                    sa.answer_json
+                FROM submission_answers sa
+                INNER JOIN questions q ON q.id = sa.question_id
+                WHERE sa.submission_id IN (' . implode(', ', $placeholders) . ')
+                ORDER BY sa.submission_id ASC, q.position ASC, sa.id ASC';
+
+        $stmt = $this->connection()->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue(':' . $key, $value, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll() ?: [];
+        if ($rows === []) {
+            return [];
+        }
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            $submissionId = (int) ($row['submission_id'] ?? 0);
+            if ($submissionId <= 0) {
+                continue;
+            }
+
+            $answerValue = null;
+
+            if ($row['answer_json'] !== null && trim((string) $row['answer_json']) !== '') {
+                $decoded = json_decode((string) $row['answer_json'], true);
+                $answerValue = json_last_error() === JSON_ERROR_NONE ? $decoded : (string) $row['answer_json'];
+            } elseif ($row['answer_text'] !== null && trim((string) $row['answer_text']) !== '') {
+                $answerValue = (string) $row['answer_text'];
+            } elseif ($row['answer_number'] !== null) {
+                $answerValue = (float) $row['answer_number'];
+            }
+
+            $grouped[$submissionId][] = [
+                'question_id' => (int) ($row['question_id'] ?? 0),
+                'question_label' => (string) ($row['question_label'] ?? ''),
+                'field_name' => (string) ($row['field_name'] ?? ''),
+                'question_type' => (string) ($row['question_type'] ?? ''),
+                'answer' => $answerValue,
+            ];
+        }
+
+        return $grouped;
     }
 
     private function buildWhereClause(array $filters, array &$params): string
